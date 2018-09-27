@@ -1,0 +1,56 @@
+{% extends 'admin/default.html' %}
+
+{% set page_title = 'Баннеры' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-xs-8">
+                <div class="btn-group">
+                    <a href="{{ url_for('admin.banners') }}" class="btn btn-default{% if url_for('admin.banners') == request.path %} active{% endif %}">Все</a>
+                    {% for group, name in type_choices  %}
+                    <a href="{{ url_for('admin.banners.group', group=group) }}" class="btn btn-default{% if url_for('admin.banners.group', group=group) == request.path %} active{% endif %}">{% if name == 'Маленький' %}Маленькие{% else %}{{ name }}{% endif %}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-xs-4 text-right">
+                <div class="btn-group">
+                    <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Новый баннер <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        {% for group, name in type_choices  %}
+                        <li><a href="{{ url_for('admin.banners.group.create', group=group) }}">{{ name|lower }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="box">
+            <div class="box-body no-padding">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th></th>
+                            <th>Тип</th>
+                            <th width="20%">Имя и почта</th>
+                            <th width="20px">Оценка</th>
+                            <th width="60%">Отзыв</th>
+                            <th>Товар</th>
+                            <th>Одобр.</th>
+                        </tr>
+                        {% for banner in banners %}
+                        <tr>
+                            <td>{% if banner.bg_image %}<a href="{{ url_for('admin.banners.group.edit', group=banner.banner_type, id=banner.id) }}"><img src="{{ url_for('media', filename=banner.bg_image) }}" style="max-width: 60px;" /></a>{% endif %}</td>
+                            <td style="vertical-align: middle;"><a href="{{ url_for('admin.banners.group.edit', group=banner.banner_type, id=banner.id) }}">{% for group, name in type_choices %}{% if group == banner.banner_type %}{{ name }}{% endif %}{% endfor %}</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

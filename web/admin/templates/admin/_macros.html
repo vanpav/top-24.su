@@ -1,0 +1,192 @@
+{% macro sidebar_url(name, endpoint, childs) %}
+    {% set icon = kwargs.pop('icon', None) %}
+    {% set _class = '' %}
+    {% if request.path == url_for(endpoint, **kwargs) %}
+        {% set _class = '%s %s' % (_class, 'active') %}
+    {% endif %}
+    {% if childs|length %}
+        {% set _class = '%s %s' % (_class, 'treeview') %}
+    {% endif %}
+    <li{% if _class != '' %} class="{{ _class }}"{% endif %}>
+        <a href="{{ url_for(endpoint, **kwargs) }}">
+            {% if icon %}<i class="fa {{ icon }}"></i>{% endif %}<span>{{ name|capitalize }}</span></i>
+        </a>
+        {% if childs|length %}
+        <ul class="treeview-menu">
+        {% for child in childs %}
+            {% set arguments = child.get('arguments', {}) %}
+            <li><a href="{{ url_for(child.get('endpoint'), **arguments) }}"><i class="fa fa-circle-o"></i>{{ child.get('name') }}</a></li>
+        {% endfor %}
+        </ul>
+        {% endif %}
+    </li>
+{% endmacro %}
+
+{% macro render_form_field(field) %}
+    {% set class = 'form-control' %}
+    {% set _class = kwargs.pop('class', None) %}
+    {% if _class %}
+        {% set class = '%s %s' % (class, _class) %}
+    {% endif %}
+    {{ field(class=class, **kwargs) }}
+    {% if field.errors %}
+    {{ field.errors[0] }}
+    {% endif %}
+{% endmacro %}
+
+{% macro render_form_button(field) %}
+    {% set icon = kwargs.pop('icon', None) %}
+    {% set class = 'btn' %}
+    {% set _class = kwargs.pop('class', None) %}
+    {% if _class %}
+        {% set class = '%s %s' % (class, _class) %}
+    {% endif %}
+    {{ field(class=class, **kwargs) }}
+{% endmacro %}
+
+{% macro render_categories(categories, lvl=-1) %}
+    {% set lvl = lvl + 1 %}
+    {% for category in categories %}
+    <tr>
+        <td>{{ category.get('id') }}</td>
+        <td {% if lvl > 0 %}style="padding-left: {{ 30*lvl }}px{% endif %}">
+            {% if category.get('offers') %}
+            <a href="{{ url_for('admin.parser.category', category_id=category.get('id')) }}">{{ category.get('name') }}</a>
+            {% else %}
+            {{ category.get('name') }}
+            {% endif %}
+        </td>
+        <td>{{ category.get('offers') }}</td>
+        <td>
+        {% if category.category %}
+            {{ category.category }}
+        {% elif category.get('offers') %}
+            {% set form = category.get('form') %}
+            <form action="" method="post">
+                {{ form.hidden_tag() }}
+                {{ form.category(class="category_select", style="width: 100%;") }}
+            </form>
+        {% endif %}
+        </td>
+    </tr>
+    {% if category.get('childs') %}
+        {{ render_categories(category.get('childs'), lvl=lvl) }}
+    {% endif %}
+    {% endfor %}
+{% endmacro %}
+
+{% macro render_form_modal(id, action, method, button_name, form, header) %}
+<div class="modal fade" id="{{ id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">{% if header %}{{ header }}{% else %}&nbsp;{% endif %}</h4>
+      </div>
+        <form action="{{ action }}" method="{{ method }}">
+          {{ form.hidden_tag() }}
+          <div class="modal-body">
+          {{ caller(form) }}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Закрыть</button>
+            <button type="submit" class="btn btn-primary">{{ button_name }}</button>
+          </div>
+        </form>
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
+{% macro render_category_list(categories) %}
+{% for category in categories %}
+    {% with c = category %}
+        {% if c|is_list %}
+        {% set category, childs = c %}
+        {% else %}
+        {% set category = c %}
+        {% endif %}
+        <li id="list_{{ category.id }}">
+            <span class="handle">
+              <i class="fa fa-ellipsis-v"></i>
+              <i class="fa fa-ellipsis-v"></i>
+            </span>
+            <a href="{{ url_for('admin.catalog.category', category_id=category.id) }}"{% if request.path == url_for('admin.catalog.category', category_id=category.id) %} class="active"{% endif %}>
+              {{ category.name }}
+            </a>
+            <div class="tools">
+                <i class="fa fa-plus" data-toggle="modal" data-target="#addcategoryModal" data-parentid="{{ category.id }}"></i>
+                <a href="{{ url_for('admin.catalog.category.edit', category_id=category.id) }}"><i class="fa fa-edit"></i></a>
+            </div>
+            {% if childs %}
+            <ul>
+                {{ render_category_list(childs) }}
+            </ul>
+            {% endif %}
+        </li>
+    {% endwith %}
+{% else %}
+    Нет категорий
+{% endfor %}
+{% endmacro %}
+
+{% macro messages() %}
+  {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+      {% for category, m in messages %}
+        {% if category %}
+        {# alert-error changed to alert-danger in bootstrap 3, mapping is for backwards compatibility #}
+        {% set mapping = {'message': 'info', 'error': 'danger'} %}
+        <div class="alert alert-{{ mapping.get(category, category) }} alert-dismissable">
+        {% else %}
+        <div class="alert alert-dismissable">
+        {% endif %}
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+          {{ m }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+{% endmacro %}
+
+
+{% macro render_pagination(pagination, endpoint) %}
+    <nav>
+      <ul class="pagination">
+        {%- for page in pagination.iter_pages() %}
+            {% if page %}
+                {% if page != pagination.page %}
+                    <li><a href="{{ url_for(endpoint, page=page, **kwargs) }}">{{ page }}</a></li>
+                {% else %}
+                    <li class="active"><a href="{{ url_for(endpoint, page=page, **kwargs) }}">{{ page }}</a></li>
+                {% endif %}
+            {% else %}
+              <span class=ellipsis>…</span>
+            {% endif %}
+        {%- endfor %}
+      </ul>
+    </nav>
+{% endmacro %}
+
+{% macro render_image_field(field) %}
+    {{ field.hidden_tag() }}
+    {% if field.original.data %}
+        {% set image = url_for('media', filename=field.original.data) %}
+    {% else %}
+        {% set image = field.url.data %}
+    {% endif %}
+    <img src="{{ image }}" alt=""/>
+    <div class="tools">
+        <span class="pic_remove"><i class="fa fa-remove"></i></span>
+    </div>
+    <div style="display: none">
+        {{ field.url }}
+        {{ field.big }}
+        {{ field.medium }}
+        {{ field.small }}
+        {{ field.original }}
+    </div>
+    {% if field.errors %}
+        {{ field.errors }}
+    {% endif %}
+{% endmacro %}

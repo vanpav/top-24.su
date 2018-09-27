@@ -1,0 +1,16 @@
+{% macro render_breadcrumbs() %}
+    <div class="row">
+        <div class="col-12">
+            <ul class="breadcrumbs">
+                {% if not breadcrumbs %}
+                    <li class="breadcrumbs__item"><a href="{{ url_for('site.index') }}" class="breadcrumbs__item-link"><span class="breadcrumbs__item-logo"></span> Вернуться на главную</a></li>
+                {% else %}
+                    <li class="breadcrumbs__item"><a href="{{ url_for('site.index') }}" class="breadcrumbs__item-link"><span class="breadcrumbs__item-logo"></span></a></li>
+                    {% for breadcrumb in breadcrumbs %}
+                    <li class="breadcrumbs__item"><a href="{{ url_for(request.endpoint, path=breadcrumb[1]) }}" class="breadcrumbs__item-link">{{ breadcrumb[0] }}</a></li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+{% endmacro %}

@@ -1,0 +1,28 @@
+{% from 'macros/__all.html' import render_breadcrumbs with context %}
+{% from 'macros/__offers.html' import render_offer %}
+
+{% extends 'base.html' %}
+
+{% block title %}
+Отложенные товары{{ default_title_separator }}{{ default_title }}
+{% endblock %}
+
+{% block content %}
+{{ render_breadcrumbs() }}
+<div class="row">
+    <div class="col-12">
+        <h1>Отложенные товары</h1>
+        {% if offers %}
+        <div class="row--padding">
+            <ul class="blocks-4 offers">
+            {% for offer in offers %}
+                {{ render_offer(offer) }}
+            {% endfor %}
+            </ul>
+        </div>
+        {% else %}
+        <p>Вы пока не отложили для себя товаров</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

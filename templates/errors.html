@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}{{ config.get('DEFAULT_TITLE_SEPARATOR', ' | ') }}{{ config.get('DEFAULT_TITLE') }}</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon"/>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}" sizes="32x32" />
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Exo+2:400,700&subset=latin,cyrillic');
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            font-family: 'Exo 2', Helvetica, Arial, Sans-Serif;
+        }
+
+        .line {
+            padding: 20px 0;
+            width: 60%;
+            margin: 0 auto;
+        }
+
+        .line-error {
+            margin: 60px auto 20px auto;
+        }
+
+        .line-logotype {
+            position: relative;
+        }
+
+        .line-logotype:after {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            margin-left: -125px;
+            width: 250px;
+            height: 108px;
+            background: #fff;
+            content: '';
+            display: block;
+            border-radius: 0 0 16px 16px;
+            box-shadow: 0px 1px 20px 0px rgba(0,0,0,0.10);
+        }
+
+        .logotype {
+            position: relative;
+            z-index: 1;
+            white-space: nowrap;
+            text-indent: 9999px;
+            display: inline-block;
+            overflow: hidden;
+            width: 159px;
+            height: 63px;
+            background-image: url('{{ url_for('static', filename="img/logotype.svg") }}');
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        h1 {
+            font-size: 46px;
+            margin: 0 0 40px 0;
+        }
+
+        a {
+            text-decoration: none;
+            color: #000;
+            transition: color .2s;
+        }
+
+        a:hover {
+            color: #FF4432;
+        }
+
+        .ename {
+            display: block;
+            color: #999;
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .etext {
+            font-size: 21px;
+        }
+
+        .categories {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .categories > li {
+            display: inline-block;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="line line-logotype">
+        <a href="{{ url_for('site.index') }}" class="logotype">{{ config.get('DEFAULT_TITLE', 'ТОП-24') }}</a>
+    </div>
+    <div class="line line-error">
+        <span class="ename">{{ error_name }}</span>
+        <h1>{{ title }}</h1>
+        <p class="etext">{{ error_text|safe }}</p>
+    </div>
+    <div class="line">
+        <ul class="categories">
+            <li><a href="{{ url_for('site.index') }}">Главная</a></li>
+            {% for category in categories %}
+            <li><a href="{{ url_for('site.dispatcher', path=category.path) }}">{{ category.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

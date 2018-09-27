@@ -1,0 +1,110 @@
+{% from 'admin/_macros.html' import render_form_field %}
+{% extends 'admin/default.html' %}
+
+{% if banner.id %}
+    {% set page_title = 'Редактирование баннера: %s' % group_name %}
+{% else %}
+    {% set page_title = 'Новый баннер: %s' % group_name %}
+{% endif %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div>
+            {% if banner.id and banner.bg_image %}
+                <img src="{{ url_for('media', filename=banner.bg_image) }}" alt="">
+                <br /><br>
+            {% endif %}
+        </div>
+        <div class="box">
+            <form action="" class="form" method="post" enctype="multipart/form-data">
+                <div class="box-body">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        <label for="recipient-name" class="control-label">{{ form.bg_color.label.text }}</label>
+                        {{ render_form_field(form.bg_color) }}
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="control-label">{{ form.bg_image.label.text }}</label>
+                        {{ render_form_field(form.bg_image) }}
+{#                        <div class="dropzone" id="image_upload"></div>#}
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient-name" class="control-label">{{ form.link_to.label.text }}</label>
+                        {{ render_form_field(form.link_to) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.is_enabled }}
+                        <label for="{{ form.is_enabled.id }}" class="control-label">{{ form.is_enabled.label.text }}</label>
+                    </div>
+                    <hr>
+                    {% if group == 'wide' %}
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">{{ form.left_top.label.text }}</label>
+                            {{ render_form_field(form.left_top) }}
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">{{ form.left_bot.label.text }}</label>
+                            {{ render_form_field(form.left_bot) }}
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">{{ form.right_top.label.text }}</label>
+                            {{ render_form_field(form.right_top) }}
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">{{ form.right_bot.label.text }}</label>
+                            {{ render_form_field(form.right_bot) }}
+                        </div>
+
+                    {% elif group == 'small' %}
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">{{ form.header.label.text }}</label>
+                            {{ render_form_field(form.header) }}
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">{{ form.bottom.label.text }}</label>
+                            {{ render_form_field(form.bottom) }}
+                        </div>
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">{{ form.bottom_size.label.text }}</label>
+                            {{ render_form_field(form.bottom_size) }}
+                        </div>
+                    {% elif group == 'main' %}
+
+                    {% endif %}
+                </div>
+                <div class="box-footer">
+                    {{ form.submit(class_='btn btn-primary') }}
+                    {{ form.submit_and_stay(class_='btn btn-default') }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js_scripts %}
+{{ super() }}
+<script>
+    $(function() {
+        var csrftoken = "{{ csrf_token() }}";
+
+        $('#bg_color').colorpicker();
+
+{#        Dropzone.options.imageUpload = {#}
+{#            url: '{{ url_for('admin.banners.group.upload') }}',#}
+{#            headers: {#}
+{#                'X-CSRF-Token': csrftoken#}
+{#            },#}
+{#        };#}
+
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken)
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

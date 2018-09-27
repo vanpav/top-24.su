@@ -1,0 +1,59 @@
+// Any columns grid
+
+$columns=12
+
+.row
+    width 94%
+    margin-left auto
+    margin-right auto
+    max-width 1201px
+    clearfix()
+
+    .row
+        width 100%
+        margin-left 0
+        margin-right 0
+    
+    &--margin
+        margin-top 30px
+        margin-bottom 30px
+
+    &--margin-sm
+        margin-top 15px
+        margin-bottom 15px
+
+
+    &--padding
+        padding-top 20px
+        padding-bottom 20px
+
+    &--padding-sm
+        padding-top 10px
+        padding-bottom 10px
+
+
+[class*='col-']
+    float left
+
+.col
+    for num in (1..($columns))
+        &-{num}
+            width (100/($columns) * num)%
+
+    i = $columns - 1
+    for num in (1..i)
+        &--padd-{num}
+            margin-left (100/($columns) * num)%
+
+    &--padding-20
+        padding 0 20px
+
+    &--padding-10
+        padding-left 10px
+        padding-right 10px
+
+    &--padding-l-30
+        padding-left 30px
+
+    &--padding-r-30
+        padding-right 30px

@@ -1,0 +1,1737 @@
+@import url('https://fonts.googleapis.com/css?family=Exo+2:400,700&subset=latin,cyrillic');
+
+@import 'normalize'
+@import 'defaults'
+@import 'grid'
+
+@import 'include/owl.carousel.css'
+@import 'include/fotorama.css'
+
+html
+body
+    height 100%
+
+body
+    font-family f_default
+    font-size 15px
+    background-color #fff
+
+.grey-border
+    height 1px
+    background-color c_lightgrey
+
+.h2-header
+    margin-top 0
+    margin-bottom 15px
+    font-size 24px
+    font-weight  bold
+
+
+.modal
+    height 100%
+    width 100%
+    z-index 997
+    position fixed
+    background alpha(#000, 0.5)
+
+    &--hide
+        display none
+
+    &__hider
+        position fixed
+        z-index 998
+        height 100%
+        width 100%
+
+    &__window
+        z-index 999
+        position fixed
+        left 50%
+        top 50%
+        max-height 100%
+        overflow-y auto
+        background #fff
+        border-radius d_border-radius
+        transition transform .2s ease-out, opacity .2s
+        opacity 1
+        block-shadow()
+
+        &--hide
+            transform scale(0.1)
+            opacity 0
+
+        &-wrapper
+            position relative
+
+        &-close
+            position absolute
+            display block
+            width 24px
+            height 24px
+            top 6px
+            right 6px
+            z-index 3
+            background-image url('../img/icon_close.svg')
+            background-position center center
+            background-repeat no-repeat
+            opacity 0.4
+            cursor pointer
+            transition opacity .2s
+
+            &:hover
+                opacity 0.8
+
+
+.modal-offer
+    width 100%
+    max-width 340px
+    position relative
+
+    &__info
+    &__form
+        padding 25px 30px
+
+    &__info
+        text-align center
+        padding 25px 30px
+
+        &-badges
+            position absolute
+            left 10px
+            top 8px
+
+    &__name
+        font-weight normal
+        font-size 18px
+        margin 8px 0 10px 0
+
+    &__price
+        font-size 32px
+        font-weight bold
+        padding 10px 0 0 0
+
+        &--special
+            color c_orange
+
+            span
+                text-decoration line-through
+                color c_greytext
+                font-size 18px
+                font-weight normal
+                display inline-block
+                vertical-align middle
+                margin-right 10px
+                padding-bottom 5px
+
+    &__countdown
+        position absolute
+        left 50%
+        bottom 0
+        transform translateX(-50%)
+        pointer-events none
+
+        .countdown
+            display inline-block
+            background-color alpha(#fff, 0.7)
+            padding 0 7px 2px 7px
+            border-radius d_border-radius
+
+    &__image
+        height 200px
+        position relative
+
+        img
+            max-width 100%
+
+    &__form
+        background-color c_lightergrey
+        position relative
+
+        &-line
+            position relative
+            padding 0 0 10px 95px
+
+            label
+                left 0
+                top 50%
+                transform translateY(-50%)
+                margin-top -5px
+                position absolute
+
+            &--error
+                label
+                    color c_orange
+                .input
+                    border-color c_orange
+
+        &-button
+            padding 10px 0 0 95px
+
+
+    &__loading
+        position absolute
+        top 0
+        left 0
+        right 0
+        bottom 0
+        background alpha(c_lightergrey, .9)
+        z-index 2
+
+        &-spinner
+            position absolute
+            top 50%
+            left 50%
+            transform translate(-50%, -50%)
+
+.modal-delivery
+    min-width 400px
+    height 566px
+
+    &__search
+        padding 25px 30px
+        border-bottom 1px solid c_lightergrey
+
+    &__founded
+        list-style-type none
+        margin 0
+        padding 0
+
+        &-error
+            padding 15px 30px
+            color c_greytext
+
+        &-item
+            padding 15px 30px
+            cursor pointer
+
+            &--selected
+            &:hover
+                color #fff
+                background-color c_linkblue
+
+
+.layout
+    display table
+    table-layout fixed
+    width 100%
+    height 100%
+
+    &__main
+        display table-row
+
+    &__footer
+        display table-footer-group
+        height 1px
+        background-color c_lightergrey
+
+    &__wrapper
+        width 100%
+        display table-cell
+
+.header
+    background-color #fff
+    padding 16px 0 8px 0
+    position relative
+    z-index 2    
+    
+    &__logotype
+        white-space nowrap
+        text-indent 9999px
+        display inline-block
+        overflow hidden
+        width 106px
+        height 42px
+        background-image url('../img/logotype.svg')
+        background-repeat no-repeat
+        background-size cover
+        position relative
+        top -3px
+    
+    &__iconed
+        display table
+        
+        &-left
+        &-right
+            vertical-align middle
+            display table-cell
+        
+        &-left
+            position relative
+            width 32px
+            transition transform ease-in .2s
+
+            &--added
+                transition transform ease-out .1s
+                transform scale(1.5) translateY(4px)
+
+        &-right
+            padding-left 10px
+
+
+    &__cart
+        &-count
+            background-color c_orange
+            border-radius d_border-radius
+            border 2px solid #fff
+            position absolute
+            font-size 13px
+            color #fff
+            top -7px
+            left 50%
+            margin-left -10px
+            min-width 24px
+            line-height 1.1em
+            text-align center
+
+    &__search
+        padding-top 3px
+        position relative
+
+        .input
+            position absolute
+            right 0
+            transition width .3s
+
+            &:focus
+                width 200%
+
+                ~ .header__search-button
+                    pointer-events all
+                    opacity 1
+
+        &-button
+            position absolute
+            right 0
+            top 2px
+            z-index 1
+            width 32px
+            height 32px
+            background none
+            background-image url('../img/icon_search.svg')
+            background-position center center
+            background-repeat no-repeat
+            transition opacity .3s, background-image .2s
+            opacity .5
+            pointer-events none
+
+            &:hover
+                background-image url('../img/icon_search_fill.svg')
+
+
+.mainnav
+    border-top 1px solid c_lightgrey
+    background-color #fff
+    position relative
+    z-index 1
+    block-shadow()
+
+    &__list
+        list-style-type none
+        margin 0
+        padding 0
+        margin-left -20px
+        clearfix()
+
+
+        &-item
+            margin-left 20px
+            float left
+
+            &--pull-right
+                float right
+
+        &-link
+            display inline-block
+            line-height 30px
+            text-decoration none
+            padding 14px 0 17px 0
+            border-bottom none !important
+
+            &--active
+                position relative
+                color #000 !important
+
+                &:before
+                    content ' '
+                    display block
+                    position absolute
+                    top -1px
+                    left 0
+                    right 0
+                    z-index 2
+                    height 1px
+                    background-color #000
+
+            &--specials
+                color c_orange !important
+                font-weight bold
+
+            &--fresh
+                color c_green !important
+                font-weight bold
+
+
+        &--has-active
+            .mainnav__list-link
+                color c_greytext
+
+                &:hover
+                    color c_orange
+
+.content
+    padding-bottom 20px
+
+    &__text
+        font-size 13px
+        border 2px solid c_lightgrey
+
+        &-header
+            margin 10px 0
+            text-align center
+            padding 0 30px
+            font-size 32px
+
+        &--padding-20
+            padding 8px 20px 15px 20px
+
+
+        p
+        ul
+            margin 0.7em 0 0.7em 0
+            line-height 1.5em
+
+        &--hide
+            display none
+
+        &--index
+            padding 20px 20px
+            font-size 15px
+
+            h2
+                font-size 18px
+
+    &__yamap
+        margin 20px -30px
+        padding 30px
+        block-shadow()
+        border-radius d_border-radius
+
+    &__page
+        line-height 1.4em
+
+    &__towns-list
+        list-style none
+        margin 0 -30px
+        padding 20px 30px 20px 30px
+        block-shadow()
+        border-radius d_border-radius
+
+
+        li
+            font-size 13px
+            width 25%
+            display inline-block
+            margin-bottom 2px
+            padding-right 15px
+            margin-left -.2em
+
+
+    &__tabs
+        list-style-type none
+        margin 0
+        padding 0
+        clearfix()
+
+        &-item
+            float left
+            padding 10px 20px
+            border-left 2px solid c_lightgrey
+            border-top 2px solid c_lightgrey
+            position relative
+
+            &:last-child
+                border-right 2px solid c_lightgrey
+
+            &--active
+                &:after
+                    content ''
+                    position absolute
+                    bottom -2px
+                    left 0
+                    right 0
+                    border-bottom 2px solid #fff
+
+                a
+                span
+                    color c_greytext
+
+
+.footer
+    &__menu
+        list-style-type none
+        margin 0 0 0 -15px
+        padding 0 30px 0 0
+
+        &-item
+            display inline-block
+            margin-left 15px
+            line-height 1.8em
+
+    &__copyright
+        margin .45em 0
+        color c_greytext
+
+    &__contact-link
+        line-height 1.8em
+
+.benefits
+    width 100%
+    border 1px solid c_lightergrey
+    border-top 0
+    overflow hidden
+
+    &__item
+        padding 10px 10px 15px 10px
+        position relative
+
+        &:after
+            content ''
+            display block
+            position absolute
+            top 0
+            right 0
+            width 10px
+            height 300px
+            border-right 1px solid c_lightergrey
+
+        &:last-child:after
+            border-right 0
+
+    &__text
+        display block
+        color c_text
+        font-size 13px
+        margin-top 7px
+
+.ear
+    display block
+    height 150px
+    border-bottom none
+    background #eee
+    border-top 1px solid #fff
+    overflow hidden
+    position relative
+    background-size cover
+    background-position center center
+
+    &:after
+        content ''
+        display block
+        position absolute
+        background-color alpha(#333, 0.2)
+        z-index 1
+        top 0
+        left 0
+        bottom 0
+        right 0
+        transition background-color .2s
+
+    &:nth-child(1)
+        border-top 0
+
+    &:hover
+        color #000
+        border-bottom 0
+
+        &:after
+            background-color alpha(c_orange, 0.9)
+
+    &__image
+        position absolute
+        top 0
+        bottom 0
+        width 100%
+
+        img
+            width 100%
+
+    &__title
+        display block
+        font-size 18px
+        line-height 1em
+        padding 15px 20px
+        position relative
+        z-index 2
+
+
+    &__sign
+        z-index 2
+        display block
+        position absolute
+        font-size 13px
+        line-height 1.2em
+        bottom 0
+        padding 15px 20px
+
+        &--price
+            font-size 18px
+            font-weight bold
+
+    &--light
+        color #fff
+        background-color c_text
+
+        &:hover
+            color #fff
+
+    &--index
+        border-left 1px solid #fff
+        height 180px
+
+        .ear
+            &__title
+                font-size 24px
+                padding 24px 30px
+
+            &__sign
+                padding 22px 30px
+
+    &--big
+        height 360px
+        background-size none
+        background-position top left
+
+        &:after
+            display none
+
+
+.offers
+    border-left 1px solid c_lightergrey
+    padding-top 1px
+
+    &__item
+        margin-top -1px
+        border-top 1px solid c_lightergrey
+        border-bottom 1px solid c_lightergrey
+        border-right 1px solid c_lightergrey
+        background-color #fff
+        height 320px
+        overflow hidden
+
+        &:hover
+            .offers__item
+                &-favorite
+                    transform translate(0, 0)
+
+
+        &-top
+            padding 10px
+            padding-bottom 0
+            position relative
+            z-index 0
+            height 200px
+            display table
+            width 100%
+
+        &-wrapper
+            display table-cell
+            width 100%
+            height 100%
+            vertical-align middle
+            position relative
+
+        &-picture
+            text-align center
+            width 100%
+            height 190px
+            img
+                max-width 100%
+                max-height 100%
+
+        &-badges
+            pointer-events none
+            position absolute
+            top 0
+            left 0
+
+        &-favorite
+            position absolute
+            right 0
+            top 0
+            transition transform .2s
+            transform translate(0, -50px)
+
+            &--added
+                transform translate(0, 0)
+
+                .icon--heart-grey
+                    background-image url('../img/icon_heart-fill.svg')
+
+        &-info
+            text-align center
+            transition top .2s, box-shadow ease-out .4s
+            height 300px
+            top 0
+            position relative
+            z-index 1
+            padding 0 15px
+            background #fff
+
+            &:hover
+                box-shadow 0 -10px 50px -25px alpha(#000, 0.5)
+                top -43px
+
+                .offers__item-buttons
+                    opacity 1
+
+                .offers__item-price
+                    transform scale(1.2)
+
+                .offers__item-countdown__until
+                    opacity 1
+
+
+
+        &-category
+            display inline-block
+            margin 10px 0 1px 0
+            overflow hidden
+            height 1.5em
+
+        &-name
+            margin -4px 0 5px 0
+            height 2.5em
+            overflow hidden
+
+            &__link
+                border-bottom 1px solid transparent
+
+        &-price
+            transition transform .2s
+            font-size 18px
+            font-weight bold
+            margin 5px 0
+
+            &--special
+                color c_orange
+
+        &-oldprice
+            color c_greytext
+            font-weight normal
+            text-decoration line-through
+            margin-right 7px
+
+        &-buttons
+            position relative
+            margin 0 -10px
+            transition opacity .2s
+            margin-top 21px
+            opacity 0
+            white-space nowrap
+
+            .btn
+                margin-bottom 2px
+
+        &-countdown
+            position absolute
+            top -3em
+            left 20px
+            right 20px
+            text-align center
+            pointer-events none
+
+            &__until
+                transition opacity .2s
+                position absolute
+                left 50%
+                transform translate(-50%, 0)
+                top -1.8em
+                opacity 0
+                display inline-block
+
+            .countdown
+                display inline-block
+                background-color alpha(#fff, 0.7)
+                padding 0 7px 2px 7px
+                border-radius d_border-radius
+                //text-shadow 0 0 7px #fff
+
+
+    &--simple
+        .offers
+            &__item
+                height 80px
+
+                &-top
+                    width 80px
+                    height 80px
+                    min-height 0
+                    padding 0 10px
+                    display table-cell
+                    vertical-align middle
+
+                &-picture
+                    width 60px
+                    height 60px
+                    padding 0
+
+                &-info
+                    vertical-align middle
+                    top 0
+                    box-shadow none
+                    text-align left
+                    display table-cell
+                    width calc(100% - 80px)
+                    height 80px
+                    margin 0
+                    margin-left -.3em
+                    font-size 13px
+                    padding 0 10px 3px 0
+
+                    &:hover
+                        .offers__item-price
+                            transform scale(1)
+
+                &-name
+                    padding 0
+                    margin 0 0 2px 0
+
+                &-price
+                    font-size 15px
+                    margin 0
+
+
+.banner
+    display block
+    border-bottom 0
+    border-radius d_border-radius
+    background-repeat repeat-x
+    background-position center center
+
+    &:hover
+        border-bottom 0
+
+    &__image
+        height 140px
+        background-repeat no-repeat
+        background-position center center
+        position relative
+
+    &__text
+        position relative
+        top 70px
+        font-size 18px
+        line-height 1em
+        display inline-block
+        transform translate(0, -55%)
+
+        &-important
+            font-size 32px
+            display block
+            line-height 1em
+
+    &--light
+        color #fff
+
+
+.subscribe
+    block-shadow()
+    border-radius d_border-radius
+    position relative
+    overflow hidden
+    padding 37px 0
+
+    &:after
+    &:before
+        content ''
+        display block
+        position absolute
+        height 6px
+        left 0
+        right 0
+        background-position left
+        background-size 40px 6px
+        background-repeat repeat-x
+        background-image url('../img/subscribe_bg.png')
+
+    &:after
+        top 0
+
+    &:before
+        background-position right
+        bottom 0
+
+    &__header
+        margin-top -.4em
+
+    &__text
+        margin -10px 0 3px 0
+
+    &__errors
+        list-style-type none
+        margin 0
+        padding 0
+        font-size 13px
+        color c_orange
+
+        li
+            margin 3px 0
+
+            &:first-child
+                margin-top 7px
+
+    form + .subscribe__overlay
+        position absolute
+        width 100%
+        top 5px
+        bottom 5px
+        background-color #fff
+        z-index 1
+
+    &__overlay
+        padding 37px 0
+        text-align center
+
+        &-wrapper
+            width 100%
+            position absolute
+            top 50%
+            padding 15px
+            transform translateY(-50%)
+
+        &--hide
+            display none
+
+
+    &--side
+        padding 27px 0
+
+        .subscribe
+            &__header
+                font-size 18px
+            &__text
+                font-size 13px
+                margin-top -14px
+
+            &__errors
+                li
+                    &:first-child
+                        margin-top 0
+
+                    &:last-child
+                        margin-bottom 10px
+
+.search
+    block-shadow()
+    padding 30px
+    border-radius d_border-radius
+    margin 15px 0 30px 0
+
+
+.sidemenu
+/.sidemenu ul
+    padding 0
+    margin 0
+    list-style-type none
+    font-size 13px
+
+    &__item
+        margin 10px 0
+        position relative
+
+
+        ul
+            margin-left 15px
+            margin-bottom 13px
+
+        &-link
+            border-bottom 1px solid transparent
+
+        &-count
+            color c_greytext
+            font-size 10px
+
+        &--active
+            > .sidemenu__item-link
+                font-weight bold
+
+                > .sidemenu__item-count
+                    font-weight normal
+
+.sidemenu
+    margin-top 27px
+
+
+.breadcrumbs
+    list-style-type none
+    margin 16px 0
+    padding 0
+    font-size 13px
+    clearfix()
+
+    &__item
+        float left
+        padding-right 19px
+        position relative
+
+        &:after
+            content ''
+            display block
+            position absolute
+            width 6px
+            height 11px
+            right 6px
+            top 3px
+            background-image url('../img/bread_arrow.svg')
+            background-size cover
+            opacity 0.3
+
+        &:last-child:after
+            display none
+
+        &:first-child
+            padding-right 16px
+            .breadcrumbs__item-link
+            .breadcrumbs__item-link:hover
+                border-bottom 0
+        
+        &-link
+            border-bottom 1px solid transparent
+            color c_greytext
+
+        &-logo
+            width 24px
+            height 20px
+            display inline-block
+            vertical-align top
+            position relative
+            top -2px
+            background-image url('../img/bread_logo.svg')
+            opacity 0.3
+            margin-right 3px
+            transition opacity .2s
+
+            &:hover
+                opacity 0.5
+
+
+.category
+    &__offers-count
+        margin-left 15px
+
+
+.cart-page
+    position relative
+
+    &__loading
+        position absolute
+        top 0
+        left 0
+        right 0
+        bottom 0
+        z-index 10
+        border-radius 5px
+        background-color rgba(c_lightgrey, 0.5)
+
+    &__spinner
+        position absolute
+        top 50%
+        left 50%
+        transform translate(-50%, -50%)
+
+        p
+            font-size 18px
+
+.cart-related
+
+    .h2-header
+        position relative
+
+    &__refresh
+        background-image url('../img/icon_refresh.svg')
+        background-repeat no-repeat
+        background-size 15px 15px
+        background-position left center
+        padding-left 20px
+        opacity 0.4
+        font-size 15px
+        font-weight normal
+        position absolute
+        right 0
+        top 50%
+        margin-top -6px
+        transition opacity .2s
+        cursor pointer
+        user-select none
+        
+        &:hover
+            opacity 0.8
+
+.cart-offers
+    list-style-type none
+    margin 15px 0
+    padding 0
+    display block
+    width 100%
+
+    &__item
+        display flex
+        flex-wrap nowrap
+        align-items center
+        border 1px solid c_lightergrey
+        margin-top -1px
+        min-height 80px
+        transition border .2s
+        z-index 1
+        position relative
+
+        &-picture
+        &-title
+        &-price
+        &-count
+        &-total
+        &-delete
+            align-self vertical-align
+
+
+        &-picture
+            width 70px
+            min-width 70px
+            padding 10px
+            padding-right 0
+
+        &-title
+            width 45%
+            padding 10px
+
+        &-price
+        &-total
+            width 17%
+            font-weight bold
+            font-size 18px
+            padding-left 10px
+
+        &-total
+            padding-right 20px
+            text-align right
+
+        &-price
+            &--special
+                color c_orange
+                span
+                    color c_greytext
+                    text-decoration line-through
+                    display block
+                    font-weight normal
+
+        &-count
+            width 19%
+            white-space nowrap
+
+        &-image
+            max-width 60px
+            max-height 60px
+
+        &-delete
+            padding 0 10px
+
+        &-remove
+            width 32px
+            height 32px
+            transition opacity .2s
+            background-size 16px 16px
+            background-position center center
+            background-color c_lightgrey
+            border-radius 50%
+            opacity 0.5
+
+            &:hover
+                opacity 1
+
+        &:first-child
+            margin-top 0
+
+        &:hover
+            z-index 2
+            border-color alpha(c_bluegrey, 0.3) !important
+
+.order
+    &__total
+        background c_lightergrey
+        text-align right
+        padding 15px 20px
+        font-size 18px
+        margin-top -15px
+        font-weight bold
+
+        &-sum
+        &-delivery
+            font-size 15px
+            margin 4px 0
+            font-weight normal
+
+    &__info
+        block-shadow()
+        margin-top 15px
+        border-radius  d_border-radius
+        text-align center
+        padding 10px 0
+
+        &-name
+            font-size 18px
+            margin 0
+            padding 10px 20px 18px 20px
+            border-bottom 1px solid c_lightergrey
+
+        &-phone
+        &-email
+        &-block
+            margin 10px 0
+            padding 0 20px
+
+        &-blockhead
+            font-size 13px
+            color c_greytext
+            margin-bottom 2px
+
+    &__upsale
+        text-align center
+        margin 40px 0
+
+        &-header
+            font-size 24px
+            margin-bottom 5px
+
+        &-timer
+            font-size 18px
+            color c_orange
+
+    &__offers
+        margin 20px 0
+
+
+.order-form
+    margin 40px 0
+    block-shadow()
+    border-radius d_border-radius
+
+    .btn
+        margin 10px 0
+
+    &__wrapper
+        padding 15px 0 15px 20px
+
+    &__title
+        font-size 24px
+        margin-top 10px
+
+    &__group
+        margin 15px 0
+        border-top 1px solid c_lightergrey
+
+        &-title
+            font-size 15px
+            margin-bottom 10px
+            color c_text
+
+        &-description
+            font-size 13px
+            margin-top 0
+            margin-bottom 15px
+
+        &--comments
+            position relative
+
+            .order-form__line
+                &-name
+                    width 20%
+
+                &-input
+                    margin-left 20%
+
+    &__hasaccount
+        float right
+        position relative
+        top -2.25em
+        font-size 13px
+
+    &__line
+        padding 5px 0
+        position relative
+        clearfix()
+
+        &-name
+            position absolute
+            top 1.1em
+            width 30%
+            padding-right 10px
+            font-size 13px
+            color c_greytext
+
+            &--required
+                font-weight bold
+
+        &-input
+            margin-left 30%
+
+            &--short
+                .input
+                    width 60%
+
+        &-rating-input
+
+            label
+                display inline-block
+                padding 3px 1%
+                text-align center
+                border-radius 5px
+                cursor pointer
+
+
+                &:hover
+                    background c_lightergrey
+
+                span
+                    display block
+                    color c_greytext
+                    transition color .2s
+
+            input:checked + span
+                color #000
+
+
+
+
+        &--error
+            .order-form
+                &__line
+
+                    &-error
+                        color c_orange
+                        font-size 13px
+                        display block
+                        margin-top 3px
+
+                    &-input
+                        .input
+                        textarea
+                            border-color c_orange
+
+    &__right
+        padding 20px 40px
+
+    &__total
+        font-size 18px
+        margin 10px 0
+
+        &-price
+            font-weight bold
+            font-size 24px
+
+    &__delivery
+        &-tip
+            margin 10px 0
+            color c_greytext
+            font-size 13px
+
+
+.offer
+    margin-top 15px
+    border 1px solid c_lightergrey
+
+    &__pictures
+        text-align center
+        margin 0 auto
+        padding 10px 0
+
+        .fotorama
+            margin 0 auto
+
+    &__field-label
+        font-size 13px
+        color c_greytext
+        font-weight normal
+
+    &__info-wrapper
+        position relative
+
+    .offers__item-favorite
+        transform translate(0, 0)
+        position absolute
+        right 10px
+        top -12px
+
+    &__price
+        font-size 32px
+        font-weight bold
+
+        &--special
+            color c_orange
+
+        span
+            color c_greytext
+            font-weight normal
+            text-decoration line-through
+            font-size 18px
+            margin-left 5px
+            display inline-block
+            vertical-align middle
+            position relative
+            top -0.2em
+
+    &__stock
+        color c_greytext
+        font-size 13px
+        margin 15px 0
+
+        span
+            display inline-block
+            padding 3px 7px
+            color #fff
+            border-radius d_border-radius
+            text-transform uppercase
+            font-size 11px
+            letter-spacing .1em
+            margin-right 5px
+
+        &--in-stock
+            span
+                background-color c_green
+
+        &--not-in-stock
+            span
+                background-color c_greytext
+
+    &__text
+        width 83.3333%
+        margin 15px 0
+        padding 5px 0
+        font-size 13px
+        max-height 9.5em
+        overflow hidden
+        border-top 1px solid c_lightergrey
+        border-bottom 1px solid c_lightergrey
+        position relative
+        text-decoration none
+        display block
+
+        &-tip
+            background #000
+            color #fff
+            border-radius d_border-radius
+            display inline-block
+            padding 3px 7px 4px 7px
+            position absolute
+            bottom 5px
+            left 50%
+            transform translate(-50%, 0)
+            z-index 2
+            opacity 0
+            transition opacity .2s, bottom .2s
+
+        &:hover
+            border-bottom 1px solid c_lightergrey
+
+            .offer__text-tip
+                opacity 1
+                bottom 20px
+
+        &:after
+            content ''
+            display block
+            position absolute
+            bottom 0
+            left 0
+            right 0
+            height 30px
+            background-image linear-gradient(-180deg, rgba(255,255,255,0.00) 0%, rgba(255,255,255,0.89) 60%, #FFFFFF 100%)
+            z-index 1
+
+        p
+            margin 5px 0
+
+    &__reviews
+        margin 15px 0 25px 0
+
+    &__count
+    &__buttons
+        margin 15px 0
+
+    &__social
+        margin-top 35px
+
+    &__count
+        .control__count
+            margin-top .3em
+
+    &__deliveries
+        background-color c_lightergrey
+        display inline-block
+        border-radius d_border-radius
+        padding 7px 15px
+
+        &-list
+            list-style-type none
+            margin 8px -10px 0 -10px
+            padding 0
+
+        &-item
+            display inline-block
+            padding 0 20px 0 10px
+            font-weight bold
+
+            &:not(:last-child)
+                border-right 1px solid c_lightgrey
+
+
+        &-method
+            font-weight normal
+            font-size 13px
+
+
+
+
+.offer-compact
+    block-shadow()
+    padding 20px
+    padding-top 15px
+    border-radius d_border-radius
+    position relative
+
+    &__badges
+        position absolute
+        top 10px
+        left 10px
+        text-align left
+
+
+    .offers__item-favorite
+        transform translate(0, 0)
+        position absolute
+        top 10px
+        right 10px
+
+    &__image
+        margin 0 auto
+        width 60px
+        height 60px
+
+        img
+            max-width 100%
+            max-height 100%
+
+    &__name
+        margin 0
+        padding 5px 0 15px 0
+
+    &__price
+        border-top 1px solid c_lightergrey
+        font-size 32px
+        font-weight bold
+        padding 10px 0
+
+        &--special
+            color c_orange
+
+        span
+            text-decoration line-through
+            font-weight normal
+            color c_greytext
+            font-size 18px
+            display block
+
+    &__timer
+        border-top 1px solid c_lightergrey
+        padding 10px 0
+
+        &-title
+            color c_greytext
+            font-size 13px
+
+    &__buttons
+        .btn
+            margin-top 10px
+
+
+.reviews
+    list-style-type none
+    margin 0
+    padding 0
+
+    &__item
+        padding-bottom 15px
+
+        &-name
+            font-weight bold
+
+        &-info
+            margin-top -4px
+
+        &-date
+            color c_greytext
+
+
+
+.spinner
+    position relative
+    display inline-block
+    width w = 24px
+    height w
+    border-radius 50%
+    border 3px solid c_lightgrey
+    animation spinner 0.5s linear infinite
+
+    > span
+        display block
+        width (w/3)
+        height (w/3)
+        position absolute
+        overflow hidden
+        top -3px
+        left -3px
+
+        > span
+            display block
+            width w
+            height w
+            border-radius 50%
+            border 3px solid c_orange
+
+    &--big
+        width w = 48px
+        height w
+        border-width 6px
+
+        > span
+            top -6px
+            left -6px
+            width (w/3)
+            height (w/3)
+
+            > span
+                width w
+                height w
+                border-width 6px
+
+
+@keyframes spinner
+    from
+        transform rotate(0deg)
+
+    to
+        transform rotate(360deg)
+
+
+// Owl carousel fixes
+
+[class*='js-offers-']
+    padding-top 0 !important
+
+.owl
+    &-wrapper-outer
+        padding-top 1px
+
+    &-pagination
+        position absolute
+        top -2.4em
+        left 50%
+        transform translate(-50%, 0)
+
+    &-controls
+        text-align center
+
+    &-buttons
+        position absolute
+        right 0
+        top -2.8em
+
+    &-prev
+    &-next
+        width 32px
+        height 32px
+        display inline-block
+        text-align center
+        transition background-color .2s
+
+        &:after
+            transition opacity .2s
+            margin-top 3px
+            width 24px
+            height 24px
+            content ''
+            display inline-block
+            background-repeat no-repeat
+            background-position center center
+
+        &:hover
+            background-color c_lightergrey
+
+    &-prev.disabled
+    &-next.disabled
+        &:hover
+            background-color #fff !important
+
+    &-prev
+        border-top-left-radius d_border-radius
+        border-bottom-left-radius d_border-radius
+        &:after
+            background-image url('../img/icon_arrow_left.svg')
+
+    &-prev.disabled:after
+        opacity 0.2
+
+    &-next
+        border-top-right-radius d_border-radius
+        border-bottom-right-radius d_border-radius
+        margin-left -1px
+        &:after
+            background-image url('../img/icon_arrow_right.svg')
+
+    &-next.disabled:after
+        opacity 0.2
+
+    &-page
+        display inline-block
+        zoom 1
+
+        span
+            padding-top 9px
+            height 24px
+            display block
+
+            &:after
+                content ''
+                transition background-color .2s
+                display block
+                width 24px
+                height 6px
+                border-radius 2px
+                background-color alpha(c_bluegrey, .2)
+                margin 0 3px
+
+            &:hover:after
+                background-color alpha(c_bluegrey, .5)
+
+    &-page.active
+        span
+            &:after
+                background-color c_bluegrey
+
+// Fotorama fixes
+
+.fotorama__thumb-border
+    border-color c_bluegrey !important
+
+
+.js-sticky
+    position sticky
+    top 20px
+
+.js-cart-fixed
+    position fixed
+    z-index 99
+    display block
+    background-color #fff
+    margin -10px -10px
+    padding 10px
+    border-radius d_border-radius

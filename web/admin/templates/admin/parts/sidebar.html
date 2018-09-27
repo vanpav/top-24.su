@@ -1,0 +1,49 @@
+{% from 'admin/_macros.html' import sidebar_url %}
+
+<aside class="main-sidebar">
+<!-- sidebar: style can be found in sidebar.less -->
+<section class="sidebar">
+  <!-- sidebar menu: : style can be found in sidebar.less -->
+  <ul class="sidebar-menu">
+    <li class="header">Разделы</li>
+        {{ sidebar_url('Статистика', 'admin.index', icon='fa-dashboard') }}
+        {{ sidebar_url('Парсер', 'admin.parser', icon='fa-cloud-download') }}
+        {{ sidebar_url('Каталог', 'admin.catalog', icon='fa-shopping-cart') }}
+        {{ sidebar_url('Отзывы', 'admin.reviews', icon='fa-comment') }}
+        {{ sidebar_url('Страницы', 'admin.pages', icon='fa-list') }}
+        {{ sidebar_url('Баннеры', 'admin.banners', icon='fa-beer') }}
+{#    {{ sidebar_url('Каталог', 'admin.parser', icon='fa-shopping-cart', childs=({'name': 'Категории', 'endpoint': 'admin.parser'},#}
+{#                                                      {'name': 'Товары', 'endpoint': 'admin.parser'})) }}#}
+
+{#    <li class="treeview">#}
+{#      <a href="#">#}
+{#        <i class="fa fa-files-o"></i>#}
+{#        <span>Layout Options</span>#}
+{#        <span class="label label-primary pull-right">4</span>#}
+{#      </a>#}
+{#      <ul class="treeview-menu">#}
+{#        <li><a href="../layout/top-nav.html"><i class="fa fa-circle-o"></i> Top Navigation</a></li>#}
+{#        <li><a href="../layout/boxed.html"><i class="fa fa-circle-o"></i> Boxed</a></li>#}
+{#        <li><a href="../layout/fixed.html"><i class="fa fa-circle-o"></i> Fixed</a></li>#}
+{#        <li><a href="../layout/collapsed-sidebar.html"><i class="fa fa-circle-o"></i> Collapsed Sidebar</a></li>#}
+{#      </ul>#}
+{#    </li>#}
+
+    <li class="header">Лейблы</li>
+    <li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Important</span></a></li>
+    <li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span>Warning</span></a></li>
+    <li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span>Information</span></a></li>
+  </ul>
+  <!-- search form -->
+  <form action="#" method="get" class="sidebar-form">
+    <div class="input-group">
+      <input type="text" name="q" class="form-control" placeholder="Search..."/>
+      <span class="input-group-btn">
+        <button type='submit' name='search' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i></button>
+      </span>
+    </div>
+  </form>
+  <!-- /.search form -->
+</section>
+<!-- /.sidebar -->
+</aside>

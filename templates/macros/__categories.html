@@ -1,0 +1,51 @@
+{% macro render_categories_list(categories) %}
+
+    {% for category in categories %}
+        {% with c = category %}
+            {% if c|is_list %}
+            {% set category, childs = c %}
+            {% else %}
+            {% set category = c %}
+            {% endif %}
+            <li class="sidemenu__item{% if category.slug in request.path %} sidemenu__item--active{% endif %}">
+                <a href="{{ url_for('site.dispatcher', path=category.path) }}" class="sidemenu__item-link">{{ category.name }} {% if category.get_offers_count %}<span class="sidemenu__item-count">{{ category.get_offers_count }}</span>{% endif %} </a>
+                {% if childs %}
+                <ul>
+                    {{ render_categories_list(childs) }}
+                </ul>
+                {% endif %}
+            </li>
+        {% endwith %}
+    {% endfor %}
+
+{% endmacro %}
+
+
+{% macro render_pagination(pagination, endpoint) %}
+    {% if pagination.pages %}
+    <div class="col-2">
+        {% if pagination.has_prev %}
+            {% if pagination.prev_num == 1 %}
+                {% set url = url_for(endpoint, **kwargs) %}
+            {% else %}
+                {% set url = url_for(endpoint, page=pagination.prev_num, **kwargs) %}
+            {% endif %}
+            <a href="{{ url }}" class="btn btn--outline btn--iconed btn--icon-arrow-left"></a>
+        {% else %}
+            <span class="btn btn--outline btn--iconed btn--icon-arrow-left btn--dissabled"></span>
+        {% endif %}
+    </div>
+    <div class="col-8 text-center">
+        <div class="btn-group">
+            {% for page in pagination.iter_pages() %}{% if page %}{% if page != pagination.page %}<a class="btn btn--outline" href="{% if page == 1 %}{{ url_for(endpoint, **kwargs) }}{% else %}{{ url_for(endpoint, page=page, **kwargs) }}{% endif %}">{{ page }}</a>{% else %}<span class="btn btn--outline btn--active">{{ page }}</span>{% endif %}{% else %}<span class="btn btn--outline">...</span>{% endif %}{% endfor %}
+        </div>
+    </div>
+    <div class="col-2 text-right">
+        {% if pagination.has_next %}
+            <a href="{{ url_for(endpoint, page=pagination.next_num, **kwargs) }}" class="btn btn--outline btn--iconed btn--icon-arrow-right"></a>
+        {% else %}
+            <span class="btn btn--outline btn--iconed btn--icon-arrow-right btn--dissabled"></span>
+        {% endif %}
+    </div>
+    {% endif %}
+{% endmacro %}

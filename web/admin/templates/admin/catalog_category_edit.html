@@ -1,0 +1,96 @@
+{% from 'admin/_macros.html' import render_form_field, render_form_button %}
+{% extends 'admin/default.html' %}
+{% set page_title = 'Редактирование категории «%s»' % category.name %}
+{% set form = category_form %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <form action="" method="post">
+                {{ form.hidden_tag() }}
+                <div class="box box-solid">
+                    <div class="box-body">
+                        <div class="form-group">
+                            {{ form.description.label }}
+                            {{ render_form_field(form.description, class="form-description") }}
+                        </div>
+                    </div>
+                </div>
+                <div class="box box-solid collapsed-box">
+                    <div class="box-header">
+                      <h3 class="box-title">Категория</h3>
+                      <!-- tools box -->
+                      <div class="pull-right box-tools">
+                        <button class="btn btn-default btn-sm" data-widget="collapse" data-toggle="tooltip" title=""><i class="fa fa-plus"></i></button>
+                      </div><!-- /. tools -->
+                    </div>
+                    <div class="box-body">
+                        <div class="form-group">
+                            {{ form.name.label }}
+                            {{ render_form_field(form.name) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.parent.label }}
+                            {{ render_form_field(form.parent) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.slug.label }}
+                            <div class="input-group">
+                              <div class="input-group-addon" style="color: #999">
+                                /{{ category.parent.path }}{% if category.parent %}/{% endif %}
+                              </div>
+                              {{ render_form_field(form.slug, data_inputmask="'alias': 'dd/mm/yyyy'", data_mask='') }}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            {{ form.is_active }} {{ form.is_active.label }}
+                        </div>
+                    </div>
+                </div>
+                <div class="box box-solid collapsed-box">
+                    <div class="box-header">
+                      <h3 class="box-title">Мета-заголовки</h3>
+                      <!-- tools box -->
+                      <div class="pull-right box-tools">
+                        <button class="btn btn-default btn-sm" data-widget="collapse" data-toggle="tooltip" title=""><i class="fa fa-plus"></i></button>
+                      </div><!-- /. tools -->
+                    </div>
+                    <div class="box-body">
+                        <div class="form-group">
+                            {{ form.metas.title.label }}
+                            {{ render_form_field(form.metas.title, placeholder=category.name) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.metas.meta_description.label }}
+                            {{ render_form_field(form.metas.meta_description) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.metas.meta_keywords.label }}
+                            {{ render_form_field(form.metas.meta_keywords) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="box box-solid">
+                    <div class="box-body">
+                        <div class="btn-group">
+                            {{ render_form_button(form.submit, class="btn btn-primary") }}
+                            {{ render_form_button(form.submit_and_stay, class="btn btn-primary") }}
+                        </div>
+                        {{ render_form_button(form.delete, class='btn-danger pull-right', icon_class='fa-trash-o', onclick='return confirm("Вы действительно хотите удалить магазин?")') }}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js_scripts %}
+    {{ super() }}
+{#    <script src="{{ url_for('static', filename='admin/plugins/input-mask/jquery.inputmask.js') }}" type="text/javascript"></script>#}
+{#    <script src="{{ url_for('static', filename='admin/plugins/input-mask/jquery.inputmask.date.extensions.js') }}" type="text/javascript"></script>#}
+{#    <script src="{{ url_for('static', filename='admin/plugins/input-mask/jquery.inputmask.extensions.js') }}" type="text/javascript"></script>#}
+    <script src="{{ url_for('static', filename='admin/plugins/ckeditor/ckeditor.js') }}" type="text/javascript"></script>
+    <script>
+     CKEDITOR.replace('description');
+    </script>
+{% endblock %}

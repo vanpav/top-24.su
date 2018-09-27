@@ -1,0 +1,38 @@
+{% from 'macros/__all.html' import render_breadcrumbs with context %}
+{% from 'macros/__offers.html' import render_offer %}
+
+{% extends 'base.html' %}
+
+{% block title %}
+Отложенные товары{{ default_title_separator }}{{ default_title }}
+{% endblock %}
+
+{% block content %}
+{{ render_breadcrumbs() }}
+<div class="row">
+    <div class="col-12">
+        <h1>Поиск</h1>
+        <form class="row search">
+            <div class="col-11 col--padding-r-30">
+                <input type="text" class="input" name="s" value="{{ s|striptags }}" placeholder="Поиск" autofocus>
+            </div>
+            <div class="col-1">
+                <div class="">
+                    <input type="submit" class="btn btn--full-width" value="Найти">
+                </div>
+            </div>
+        </form>
+        {% if s and offers %}
+        <h2>Найдено {{ get_plural(offers|length, ('товар', 'товара', 'товаров')) }}</h2>
+        <ul class="blocks-4 offers">
+            {% for offer in offers %}
+                {{ render_offer(offer) }}
+            {% endfor %}
+        </ul>
+        <br /><br />
+        {% elif s and not offers %}
+        <p>Товаров не найдено по запросу «{{ s|striptags }}»</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,157 @@
+{% from 'macros/__offers.html' import render_offer %}
+
+{% extends 'base.html' %}
+
+{% block title %}
+Полезные мелочи для дома и дачи, товары для красоты и здоровья{{ default_title_separator }}ТОП-24 — магазин для умных и практичных
+{% endblock %}
+
+{% block content %}
+{% set small_banners = banners.pop('small', []) %}
+{% set wide_banners = banners.pop('wide', []) %}
+<div class="row--margin">
+    <div class="row">
+        <div class="col-{% if small_banners %}8{% else %}12{% endif %}">
+            <div class="fotorama" data-width="100%" data-height="360px" data-nav="false" data-autoplay="true" data-loop="true">
+                <div>
+                    <a href="/krasota/" class="ear ear--big ear--light" style="background-image: url('{{ url_for('static', filename='img/banner_beauty.png') }}')"></a>
+                </div>
+                <div>
+                    <a href="/dlya-doma/" class="ear ear--big ear--light" style="background-image: url('{{ url_for('static', filename='img/banner_house.png') }}');"></a>
+                </div>
+                <div>
+                    <a href="/dlya-dachi/" class="ear ear--big ear--light" style="background-image: url('{{ url_for('static', filename='img/banner_ville.png') }}'); background-position: center center;"></a>
+                </div>
+            </div>
+        </div>
+        {% if small_banners %}
+        <div class="col-4">
+            {% for banner in small_banners %}
+            <a href="{{ banner.get_link_to }}" class="ear ear--index ear--light" style="{% if banner.bg_image %}background-image: url('{{ url_for('media', filename=banner.bg_image) }}'){% else %}background-color: {{ banner.bg_color }}{% endif %};">
+                <span class="ear__title">{{ banner.header }}</span>
+                <span class="ear__sign{% if banner.bottom_size == 'bg' %} ear__sign--price{% endif %}">{{ banner.bottom }}</span>
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <ul class="blocks-5 benefits text-center">
+                <li class="benefits__item">
+                    <i class="icon-32 icon--map"></i>
+                    <span class="benefits__text">Доставка во все регионы России</span>
+                </li>
+                <li class="benefits__item">
+                    <i class="icon-32 icon--wallet"></i>
+                    <span class="benefits__text">Множество способов оплаты заказа</span>
+                </li>
+                <li class="benefits__item">
+                    <i class="icon-32 icon--finger"></i>
+                    <span class="benefits__text">Возможность заказа в один клик</span>
+                </li>
+                <li class="benefits__item">
+                    <i class="icon-32 icon--reload"></i>
+                    <span class="benefits__text">Гарантия возврата в течении 14 дней</span>
+                </li>
+                <li class="benefits__item">
+                    <i class="icon-32 icon--award"></i>
+                    <span class="benefits__text">Отличное качество товаров</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="row row--margin">
+    <div class="col-12">
+        <p class="h2-header">Популярные товары</p>
+        <ul class="blocks-4 offers">
+            {% for offer in popular_offers %}
+            {{ render_offer(offer, show_timer=False) }}
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% if wide_banners %}
+{% set banner = wide_banners[0] %}
+<div class="row row--padding">
+    <a href="{{ banner.get_link_to }}" class="col-12 banner" style="background-color: {{ banner.bg_color }}">
+        <div class="row banner__image" style="background-image: url('{{ url_for('media', filename=banner.bg_image) }}');">
+            <div class="col-6 col--padd-1"><span class="banner__text">{{ banner.left_top }}<strong class="banner__text-important">{{ banner.left_bot }}</strong></span></div>
+            <div class="col-3 col--padd-2"><span class="banner__text">{{ banner.right_top }}<strong class="banner__text-important">{{ banner.right_bot }}</strong></span></div>
+        </div>
+    </a>
+</div>
+{% endif %}
+{% if special_offers|length %}
+<div class="row row--margin">
+    <div class="col-12">
+        <p class="h2-header"><a href="" class="link-plain">Супер-цены</a></p>
+        <ul class="blocks-3 offers js-offers-special">
+            {% for offer in special_offers %}
+            {{ render_offer(offer) }}
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+{% if not is_subscribed %}
+<div class="row row--padding">
+    <div class="col-12 subscribe">
+        <form action="{{ url_for('site.subscribe') }}" class="row" method="post">
+            <div class="col-3 col--padd-1">
+                <p class="h2-header subscribe__header">Подпишись</p>
+                <p class="subscribe__text">и получай информацию о будущих акциях и скидках!</p>
+            </div>
+            <div class="col-4 col--padding-20">
+                <div class="inputs-group">
+                    {{ subscribe_form.name(class_='input', placeholder=subscribe_form.name.label.text) }}
+                    {{ subscribe_form.email(class_='input', placeholder=subscribe_form.email.label.text) }}
+                </div>
+                <ul class="subscribe__errors"></ul>
+            </div>
+            <div class="col-4">
+                <input type="submit" class="btn btn--grey btn--enter btn--enter-alone" value="">
+            </div>
+        </form>
+        <div class="subscribe__overlay subscribe__overlay--hide">
+            <div class="subscribe__overlay-wrapper">
+                <p class="h2-header subscribe__header">Спасибо!</p>
+                <p class="subscribe__text">Вы подписаны на рассылку акций и&nbsp;скидок</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+<div class="row row--padding">
+    <div class="col-12 content__text content__text--index">
+        <h1 class="content__text-header">ТОП-24 — магазин для умных и&nbsp;практичных</h1>
+        <p class="content__text--padding-20">Интернет-магазин ТОП-24 создан для тех, кто любит качественные вещи и предпочитает покупать их с комфортом. Мы собрали лучшие товары для здоровья, красоты, дома и дачи. Вся продукция – только оригинал. Здесь вы не увидите сомнительных «аналогов» и откровенных подделок. Оформляя заказ в ТОП-24, вы покупаете фирменные вещи за честную цену.</p>
+        <ul class="blocks-3 blocks--padding-20">
+            <li>
+                <h2>Как мы работаем</h2>
+                <p>Вы сами выбираете, где и когда хотите получить товар. Курьерская доставка по всей России. Во многих
+                    крупных городах России есть пункты самовывоза.</p>
+
+                <p>Отправляем посылки почтой в Белоруссию, Украину и Казахстан. Оплатить заказ можно при оформлении или
+                    наложенным платежом.</p>
+
+                <p>Форма оплаты любая – наличные или через банковскую карту – выбор за клиентом.</p>
+
+            </li>
+            <li>
+                <h2>Круглосуточная горячая линия</h2>
+                <p>Мы постарались сделать наш онлайн-магазин самым удобным для покупателей. Вы можете прийти после работы, уютно устроиться в кресле и выбрать нужный товар. Если у вас возникнут вопросы, задайте их немедленно! Звоните в ТОП-24 круглосуточно. Вы получите исчерпывающие ответы и сможете принять окончательное решение сразу же, не откладывая его на завтра.</p>
+            </li>
+            <li>
+                <h2>Интересные предложения</h2>
+                <p>Отличные брендовые товары, приятные цены, удобная доставка и оплата – это еще не все. Мы любим наших
+                    покупателей и стараемся их радовать. В разделе «Акции и скидки» могут быть интересные предложения
+                    для вас – чаще проверять эту страничку.</p>
+                <p>Внимание! Мы гарантируем качество наших товаров, но если вам не подойдет заказанная вещь, вы можете
+                    обменять ее в течение 14 дней.</p>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,142 @@
+{% from 'admin/_macros.html' import render_form_field, render_form_button, render_categories %}
+{% extends 'admin/default.html' %}
+{% set page_title = 'Парсер' %}
+
+
+{% block content %}
+
+<div class="row">
+    <div class="col-xs-12">
+        {% if not config.id %}
+        <div class="box box-danger">
+            <div class="box-header">
+                <h3 class="box-title">Данные Apishops</h3>
+            </div>
+            <div class="box-body">
+                <form action="" method="post">
+                    {{ form.hidden_tag() }}
+                    <div class="row">
+                        <div class="col-xs-3">
+                            {{ render_form_field(form.login, placeholder=form.login.label.text) }}
+                        </div>
+                        <div class="col-xs-3">
+                            {{ render_form_field(form.password, placeholder=form.password.label.text) }}
+                        </div>
+                        <div class="col-xs-2">
+                            {{ render_form_field(form.shop_id, placeholder=form.shop_id.label.text) }}
+                        </div>
+                        <div class="col-xs-3">
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% else %}
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Магазин #{{ config.shop_id }}</h3>
+            </div>
+            <div class="box-body">
+                <form action="" method="post">
+                    {{ form.hidden_tag() }}
+                    <div class="row">
+                        <div class="col-xs-8">
+                            <div class="btn-group">
+                                {% set last_update = config.updated_at if config.updated_at != None else 'нет' %}
+                                {{ render_form_button(form.update, class='btn-default', icon_class='fa-refresh', data_toggle='tooltip', data_title='Последнее: %s' % last_update) }}
+                            </div>
+                        </div>
+                        <div class="col-xs-4 text-right">
+                            {{ render_form_button(form.delete, class='btn-danger', icon_class='fa-trash-o', onclick='return confirm("Вы действительно хотите удалить магазин?")') }}
+                        </div>
+                    </div>
+                </form>
+            </div>
+            {% if not config.task_is_ready %}
+            <div class="overlay" id="download-loader">
+                <i class="fa fa-refresh fa-spin"></i>
+            </div>
+            {% endif %}
+        </div>
+        <div class="box box-info">
+            <div class="box-header">
+                <h3 class="box-title">Категории выгрузки</h3>
+                <p>Категории выгрузки нужно связать с основными категориями каталога</p>
+            </div>
+            <div class="box-body">
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        <tbody>
+                            <tr>
+                                <th>ID</th>
+                                <th>Категория выгрузки</th>
+                                <th>Кол-во товаров</th>
+                                <th>Связь с каталогом</th>
+                            </tr>
+                            {{ render_categories(categories) }}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="box-footer">
+                <div class="row">
+                    <form action="" method="post">
+                    {{ form.hidden_tag() }}
+                    <div class="col-xs-6">
+                        <button type="submit" name="copy" class="btn btn-primary">Копировать товары</button>
+                    </div>
+                    </form>
+                    <div class="col-xs-6 text-right">
+                        <a href="{{ url_for('admin.catalog') }}" class="btn btn-default"><i class="fa fa-edit"></i> Категории каталога</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js_scripts %}
+    {{ super() }}
+    <script>
+        var $select = $('.category_select').select2();
+        $select.on("select2:select", function(e) {
+            var form = $(this).closest('form'),
+                csrftoken = "{{ csrf_token() }}",
+                data = {'apicategory': form.find('#id').val(),
+                        'realcategory': e.params.data.id};
+
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken)
+                    }
+                }
+            })
+
+            $.post('{{ url_for('admin.parser') }}' + data.apicategory + '/', data, function(data) {
+
+            });
+        });
+
+        (function($) {
+            var overlay = $('#download-loader'),
+                timer;
+
+            if (!!overlay.length) {
+                timer = setInterval(function(e) {
+                    $.getJSON('/admin/parser/?download-task=1', function(data) {
+                        console.log(data);
+                        if (data.complete === true) {
+                            window.location.reload();
+                            clearInterval(timer);
+                        }
+                    })
+                }, 1000)
+            }
+        })(jQuery);
+    </script>
+{% endblock %}

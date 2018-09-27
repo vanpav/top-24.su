@@ -1,0 +1,97 @@
+{% from 'macros/__all.html' import render_breadcrumbs with context %}
+{% from 'macros/__categories.html' import render_categories_list, render_pagination %}
+{% from 'macros/__offers.html' import render_offer %}
+
+{% extends 'base.html' %}
+
+{% block extra_meta %}
+    {% if offers.has_prev %}
+        {% if offers.prev_num == 1 %}
+            {% set url = url_for(request.endpoint, path=category.path)  %}
+        {% else %}
+            {% set url = url_for(request.endpoint, path=category.path, page=offers.prev_num) %}
+        {% endif %}
+        <link rel="prev" href="{{ url }}" />
+    {% endif %}
+    {% if offers.has_next %}
+        <link rel="next" href="{{ url_for(request.endpoint, path=category.path, page=offers.next_num) }}" />
+    {% endif %}
+
+    {% if category_root_url %}
+        <link rel="canonical" href="{{ category_root_url }}" />
+    {% endif %}
+{% endblock %}
+
+{% block description %}Отличный выбор товаров категории &laquo;{{ category.name }}&raquo; по низким ценам в интернет-магазине ТОП-24. Удобная доставка и оплата.{% endblock %}
+
+{% block title %}
+{{ category.get_title }}{{ default_title_separator }}{{ default_title }}
+{% endblock %}
+
+{% block content %}
+{{ render_breadcrumbs() }}
+<div class="row">
+    <div class="col-3 col--padding-r-30">
+        <ul class="sidemenu">
+            {{ render_categories_list(tree) }}
+        </ul>
+        {% if not is_subscribed %}
+        <div class="subscribe subscribe--side row--margin">
+            <form action="{{ url_for('site.subscribe') }}" method="post" class="col--padding-20">
+                <div>
+                    <p class="h2-header subscribe__header">Подпишись</p>
+                    <p class="subscribe__text">и получай информацию о будущих акциях и скидках!</p>
+                    <div class="inputs-group row--padding-sm">
+                       {{ subscribe_form.name(class_='input', placeholder=subscribe_form.name.label.text) }}
+                       {{ subscribe_form.email(class_='input', placeholder=subscribe_form.email.label.text) }}
+                    </div>
+                    <ul class="subscribe__errors"></ul>
+                    <input type="submit" class="btn btn--grey btn--enter btn--full-width" value="Подписаться">
+                </div>
+            </form>
+            <div class="subscribe__overlay subscribe__overlay--hide">
+                <div class="subscribe__overlay-wrapper">
+                    <p class="h2-header subscribe__header">Спасибо!</p>
+                    <p class="subscribe__text">Вы подписаны на рассылку акций и&nbsp;скидок</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-9">
+        <h1>{{ category.name }}</h1>
+        <div class="row row--padding-sm">
+            <div class="col-9">
+                <form>
+                    {% if request.args.get('page') %}<input type="hidden" name="page" value="{{ request.args.get('page') }}">{% endif %}
+                    {{ ordering_form.sort(class='js-category-sort') }}
+                    {% set offers_total = offers.total %}
+                    <span class="category__offers-count">{{ get_plural(offers_total, ('товар', 'товара', 'товаров')) }}</span>
+                </form>
+            </div>
+            <div class="col-3 text-right">
+                <div class="btn-group">
+                    <a class="btn btn--outline btn--iconed btn--icon-grid btn--active" href=""></a><a class="btn btn--outline btn--iconed btn--icon-rows" href=""></a>
+                </div>
+            </div>
+        </div>
+        <ul class="blocks-3 offers">
+            {% for offer in offers.items %}
+                {{ render_offer(offer) }}
+            {% endfor %}
+        </ul>
+        {% if category_root_url %}
+        <div class="row row--padding">
+            {{ render_pagination(offers, request.endpoint, path=category.path) }}
+        </div>
+        {% else %}
+        <br><br>
+        {% endif %}
+        {% if category.description %}
+        <div class="content__text content__text--padding-20 row--margin">
+            {{ category.description|safe }}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

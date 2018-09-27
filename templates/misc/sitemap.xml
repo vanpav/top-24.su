@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+        <loc>{{ root[0] }}</loc>
+        <lastmod>{{ root[1] }}</lastmod>
+        <changefreq>always</changefreq>
+        <priority>1.0</priority>
+    </url>
+    {% for page in temp_pages %}
+    <url>
+        <loc>{{ page[0] }}</loc>
+        <lastmod>{{ page[1] }}</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    {% endfor %}
+
+    {% for category in categories %}
+    <url>
+        <loc>{{ category[0] }}</loc>
+        {% if category[1] %}<lastmod>{{ category[1] }}</lastmod>{% endif %}
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    {% endfor %}
+
+    {% for offer in offers %}
+    <url>
+        <loc>{{ offer[0] }}</loc>
+        {% if offer[1] %}<lastmod>{{ offer[1] }}</lastmod>{% endif %}
+        <changefreq>weekly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    {% endfor %}
+
+    {% for page in pages %}
+    <url>
+        <loc>{{ page[0] }}</loc>
+        {% if page[1] %}<lastmod>{{ page[1] }}</lastmod>{% endif %}
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    {% endfor %}
+
+</urlset>

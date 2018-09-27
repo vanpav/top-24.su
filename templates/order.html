@@ -1,0 +1,54 @@
+{% from 'macros/__all.html' import render_breadcrumbs %}
+{% from 'macros/__offers.html' import render_cart_offer %}
+{% extends 'base.html' %}
+
+{% block title %}
+Заказ #{{ order.apishop_id }}{{ default_title_separator }}{{ default_title }}
+{% endblock %}
+
+{% block content %}
+{{ render_breadcrumbs() }}
+<div class="row">
+    <div class="col-12"><h1>Заказ #{{ order.apishop_id }}</h1></div>
+</div>
+<div class="row">
+    <div class="col-9">
+        {% set total = 0 %}
+        <ul class="cart-offers">
+            {% for offer in order.offers %}
+            {{ render_cart_offer(offer, True) }}
+            {% endfor %}
+        </ul>
+        <div class="order__total">
+            Сумма: {{ order.get_total|smart_round }} руб.
+            {% if order.get_delivery %}
+                <div class="order__total-delivery">Доставка: {{ order.get_delivery['price'] }} руб.</div>
+                <div class="order__total-sum">Итого: {{ order.get_delivery['total'] }} руб.</div>
+            {% endif %}
+        </div>
+        {% if order.get_timer() %}
+        <order-upsale order_id="{{ order.id }}" timer_to="{{ order.get_timer() }}"></order-upsale>
+        {% endif %}
+    </div>
+    <div class="col-3 col--padding-l-30">
+        <div class="order__info">
+            <h4 class="order__info-name">{% if order.userinfo.get('fullname') %}{{ order.userinfo.get('fullname') }}{% else %}Имя не указано{% endif %}</h4>
+            <div class="order__info-phone"><div class="order__info-blockhead">Телефон:</div>{{ order.userinfo.get('phone') }}</div>
+            {% if order.userinfo.get('email', None) %}<div class="order__info-block"><div class="order__info-blockhead">Электронная почта:</div>{{ order.userinfo.get('email') }}</div>{% endif %}
+            {% if region %}
+                <div class="order__info-block"><div class="order__info-blockhead">Город:</div>{{ region.name }}</div>
+            {% endif %}
+            {% if order.userinfo.get('address', None) %}<div class="order__info-block"><div class="order__info-blockhead">Адрес:</div>{{ order.userinfo.get('address') }}</div>{% endif %}
+            {% if order.userinfo.get('comment', None) %}<div class="order__info-block"><div class="order__info-blockhead">Комментарий к заказу:</div>{{ order.userinfo.get('comment') }}</div>{% endif %}
+            {% if region and (delivery or payment) %}
+                {% if delivery %}
+                <div class="order__info-block"><div class="order__info-blockhead">Способ доставки:</div>{{ delivery.name }}</div>
+                {% endif %}
+                {% if payment %}
+                <div class="order__info-block"><div class="order__info-blockhead">Способ оплаты:</div>{{ payment.name }}</div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

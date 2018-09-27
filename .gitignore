@@ -1,0 +1,14 @@
+/ssl
+data
+*.pyc
+media
+.DS_Store
+.idea
+config.py
+.python-version
+celerybeat-schedule.*
+
+node_modules
+static/root/
+
+*.db

@@ -1,0 +1,110 @@
+{% extends 'admin/default.html' %}
+{% set page_title = 'Отзывы' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div>
+            <div class="btn-group">
+                <a href="" class="btn btn-default">Новые <span class="badge bg-green">3</span></a>
+                <a href="" class="btn btn-default">Подтвержденные <span class="badge">3</span></a>
+                <a href="" class="btn btn-default">Все</a>
+            </div>
+        </div>
+        <br />
+        <div class="box">
+            <div class="box-body no-padding">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>Действия</th>
+                            <th width="20%">Имя и почта</th>
+                            <th width="20px">Оценка</th>
+                            <th width="60%">Отзыв</th>
+                            <th>Товар</th>
+                            <th>Одобр.</th>
+                        </tr>
+                        {% for review in reviews %}
+                        <tr id="{{ review.id }}">
+                            <td>
+                                <div class="input-group-btn">
+                                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Action <span class="fa fa-caret-down"></span></button>
+                                  <ul class="dropdown-menu">
+                                    <li><a href="#">Редактировать</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#" data-review-id="{{ review.id }}" class="js-review-remove">Удалить</a></li>
+                                  </ul>
+                                </div>
+                            </td>
+                            <td><small>{{ review.fullname }}<br />{{ review.email }}</small></td>
+                            <td>{{ review.rating if review.rating else 0 }}</td>
+                            <td>
+                                <div style="height: 1.4em; overflow: hidden; font-size: 12px">{{ review.text }}</div>
+                                <a {% if not review.is_viewed %}class="js-review-set-view" data-review-id="{{ review.id }}" {% endif %}role="button" data-toggle="collapse" href="#collapse-{{ review.id }}" aria-expanded="false" aria-controls="collapse-{{ review.id }}">Читать полностью</a>
+                                <div class="collapse" id="collapse-{{ review.id }}">{{ review.text }}</div>
+                            </td>
+                            <td><a href="{{ url_for('admin.catalog.offer.edit', offer_id=review.offer.id) }}" title="{{ review.offer.name }}">{{ review.offer.id }}</a></td>
+                            <td>
+                                <input type="checkbox" data-review-id="{{ review.id }}" class="moderate-quick js-review-moderate" {% if review.is_moderated %}checked{% endif %}>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js_scripts %}
+    {{ super() }}
+    <script>
+        (function($) {
+            $('.js-review-moderate').on('click', function(e) {
+                var $this = $(this),
+                    reviewId = $this.data('review-id');
+
+                $.ajax({
+                    method: 'post',
+                    dataType: 'json',
+                    url: '{{ url_for("admin.reviews") }}',
+                    data: {command: 'toggle_moderate', review_id: reviewId}
+                })
+            });
+
+            $('.js-review-remove').on('click', function() {
+                var $this = $(this),
+                    reviewId = $this.data('review-id');
+
+                $.ajax({
+                    method: 'post',
+                    dataType: 'json',
+                    url: '{{ url_for("admin.reviews") }}',
+                    data: {command: 'remove', review_id: reviewId},
+                    success: function(res) {
+                        if (!res.errors) {
+                            $('tr#'+reviewId).slideUp(function() {
+                                $(this).remove();
+                            })
+                        }
+                    }
+
+                })
+            });
+
+            $('.js-review-set-view').on('click', function() {
+                var $this = $(this),
+                    reviewId = $this.data('review-id');
+
+                $.ajax({
+                    method: 'post',
+                    dataType: 'json',
+                    url: '{{ url_for("admin.reviews") }}',
+                    data: {command: 'set_viewed', review_id: reviewId}
+                })
+            })
+        })(jQuery);
+    </script>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% macro render_offer(offer) %}
+    {% set show_timer = kwargs.pop('show_timer', True) %}
+    <li class="offers__item">
+        <div class="offers__item-top">
+            <div class="offers__item-wrapper">
+                <div class="offers__item-picture">
+                    <a href="{{ url_for('site.dispatcher', path=offer.path) }}" class="link-plain">
+                        <img src="{{ offer.get_picture('medium') }}" alt="{{ offer.name }} Артикул #{{ offer.articul }}" title="{{ offer.name }} всего за {{ offer.get_price() }} руб.">
+                    </a>
+                </div>
+                <div class="offers__item-badges">
+                      {% if offer.special and not offer.special.is_over %}<span class="badge-special">Акция</span><br>{% endif %}
+{#                    #}
+{#                    <span class="badge-new">Новинка</span>#}
+                    {% if not offer.is_in_stock %}
+                    <span class="badge-not-in-stock">Продано</span><br/>
+                    {% endif %}
+                </div>
+                <favorite oid="{{ offer.id }}" favorited="{{ offer.is_in_favorites }}"></favorite>
+            </div>
+        </div>
+        <div class="offers__item-info text-center">
+            <div class="offers__item-category"><a href="{{ url_for('site.dispatcher', path=offer.parent_cached[1]) }}" class="link-plain link-grey text-small">{{ offer.parent_cached[0] }}</a></div>
+            <div class="offers__item-name"><a href="{{ url_for('site.dispatcher', path=offer.path) }}" class="offers__item-name__link">{{ offer.name }}</a></div>
+            <div class="offers__item-price{% if offer.special and not offer.special.is_over %} offers__item-price--special{% endif %}">{% if offer.special and not offer.special.is_over %}<span class="offers__item-oldprice">{{ offer.get_oldprice|smart_round }}</span>{% endif %}{{ offer.get_price()|smart_round }} руб.</div>
+            <div class="offers__item-buttons">
+            {% if offer.is_in_stock %}
+            <button riot-tag="add-to-cart" id="{{ offer.id }}" {% if offer.id in g.added_to_cart %}isadded="true" {% endif %}class="btn"><span class="btn__text"><i class="icon-16 icon--cart-white"></i>Добавить</span></button>
+            <a riot-tag="quick-buy" id="{{ offer.id }}" href="" class="btn btn--grey"><input type="hidden" name="offer_id" value="{{ offer.id }}"><span class="btn__text">Купить сейчас</span></a>
+            {% else %}
+            <span class="btn btn--outline">Нет в наличии</span>
+            {% endif %}
+            </div>
+
+            {% if show_timer and offer.special and not offer.special.is_over %}
+            <div class="offers__item-countdown">
+                <span class="badge-special offers__item-countdown__until">До конца акции</span>
+                <div class="countdown" data-countdown="{{ offer.special.timer }}"></div>
+            </div>
+            {% endif %}
+        </div>
+    </li>
+{% endmacro %}
+{% macro render_cart_offer(offer, idx, from_order=False) %}
+    {% set quantity = offer.quantity %}
+    {% set variant = offer.variant %}
+    {% set price = offer.price %}
+    {% set oldprice = offer.oldprice %}
+    {% set offer = offer.offer %}
+    {% set variant = offer.get_variant(variant) %}
+    <li class="cart-offers__item">
+        <div class="cart-offers__item-picture">
+            <a href="{{ url_for('site.dispatcher', path=offer.path) }}" class="link-plain"><img src="{{ offer.get_picture('small') }}" alt="{{ offer.name }}" title="{{ offer.name }}" class="cart-offers__item-image"></a>
+        </div>
+        <div class="cart-offers__item-title">
+            <a href="{{ url_for('site.dispatcher', path=offer.path) }}">{{ offer.name }} {{ variant.name|lower }}</a>
+        </div>
+        <div class="cart-offers__item-price{% if oldprice > 0 %} cart-offers__item-price--special{% endif %}">
+            {% if oldprice > 0 %}<span>{{ oldprice }}</span>{% endif %}
+            {{ offer.get_price()|smart_round }} руб.
+        </div>
+        <div class="cart-offers__item-count">
+            X {{ quantity }}
+        </div>
+        <div class="cart-offers__item-total">
+            {{ offer.get_price()|smart_round * quantity }} руб.
+        </div>
+    </li>
+{% endmacro %}
+
+{% macro render_short_offer(offer) %}
+    <li class="offers__item">
+        <a href="{{ url_for('site.dispatcher', path=offer.path) }}" class="link-plain">
+            <div class="offers__item-top">
+                <div class="offers__item-wrapper">
+                    <div class="offers__item-picture"><img src="{{ offer.get_picture('small') }}" alt="{{ offer.name }} Артикул #{{ offer.articul }}" title="{{ offer.name }} всего за {{ offer.get_price() }} руб."></div>
+                </div>
+            </div>
+            <div class="offers__item-info">
+                <div class="offers__item-name">{{ offer.name }}</div>
+                <div class="offers__item-price">{{ offer.get_price()|smart_round }} руб.</div>
+            </div>
+        </a>
+    </li>
+{% endmacro %}

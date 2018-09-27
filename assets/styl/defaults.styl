@@ -1,0 +1,511 @@
+f_default = 'Exo 2', Helvetica, Arial, sans-serif
+
+d_border-radius = 5px
+
+c_lightergrey = #f5f5f5 // Offer grids
+c_lightgrey = #e2e2e2 // Content border
+c_text = #333333
+c_greytext = #848484
+c_linkblue = #006CBF
+c_orange = #FF4432
+c_green = #00B68E
+c_bluegrey = #7596A1
+
+clearfix()
+    zoom 1
+
+    &:after
+        content ''
+        display block
+        clear both
+
+
+block-shadow()
+    box-shadow 0px 1px 20px 0px rgba(0,0,0,0.10)
+
+
+*
+    box-sizing border-box
+
+table
+    border-collapse collapse
+    border-spacing 0
+
+a
+    text-decoration none
+    color #000
+    border-bottom 1px solid alpha(#000, .2)
+    transition color .2s, border .2s
+
+    &:hover
+        border-bottom 1px solid alpha(c_orange, .4)
+        color c_orange
+
+
+.pseudo
+    color c_linkblue
+    border-bottom 1px dotted alpha(c_linkblue, .4)
+    cursor pointer
+
+h1
+h2
+h3
+    color c_text
+
+h1
+    font-size 24px
+    margin-bottom 6px
+
+    [class*='badge-']
+        position relative
+        top -2px
+        vertical-align middle
+
+h2
+    margin 1.2em 0 0.4em 0
+    font-size 18px
+
+h3
+    margin 1.2em 0 0.4em 0
+    font-size 18px
+    color c_orange
+    font-weight normal
+
+hr
+    margin 40px 0 50px 0
+    border 0
+    border-top 1px solid c_lightgrey
+
+input
+select
+textarea
+    outline none
+    transition border .2s
+
+input[type='text']
+input[type='number']
+input[type='email']
+input[type='tel']
+select
+textarea
+    &:focus
+        border 1px solid #CCE2F3 !important
+
+button
+input[type='submit']
+    outline none
+    border 0
+
+select
+    appearance none
+    border-radius d_border-radius
+    padding 0 32px 0 10px
+    border 1px solid c_lightgrey
+    background-color #fff
+    height 32px
+    background-image url('../img/icon_arrow_bottom.svg')
+    background-repeat no-repeat
+    background-position 97% center
+
+    &.full-width
+        width 100%
+
+select::-ms-expand
+    display none
+
+.hideme
+    display none !important
+
+.checkbox
+    position relative
+    top -1px
+    margin-right 3px
+
+    &__label
+        display block
+        padding 7px 0 3px 0
+
+
+.favorite-icon
+    cursor pointer
+
+    &:hover
+        .icon--heart-grey
+            background-image url('../img/icon_heart.svg')
+
+
+.half-space
+    font-size 50%
+
+.link
+    &-plain
+    &-plain:hover
+        border-bottom 0
+
+    &-grey
+        color c_greytext
+
+    &-blue
+        color c_linkblue
+        border-bottom-color alpha(c_linkblue, 0.3)
+
+    &-active
+        color c_orange
+
+
+.text
+    &-left
+        text-align left
+
+    &-center
+        text-align center
+
+    &-right
+        text-align right
+
+    &-small
+        font-size 13px
+        
+    &-grey
+        color c_greytext
+
+[class*='icon-']
+    display inline-block    
+    position relative        
+    background-size cover
+    background-repeat no-repeat
+    
+.icon
+    &-32
+        width 32px
+        height 32px
+        top 2px
+        
+    &-16
+        width 16px
+        height 16px
+        top 2px
+    
+    keys = 'cart', 'cart-white', 'heart', 'heart-grey', 'heart-fill', 'map', 'wallet', 'reload', 'finger', 'award', 'delete'
+
+    for key in (keys)    
+        &--{key}
+           background-image url('../img/icon_'+key+'.svg') 
+           
+
+[class*='blocks-']
+    list-style-type none
+    margin 0
+    padding 0
+    clearfix()
+    
+    > li
+    > a
+    > div
+        float left
+        
+
+.blocks
+    
+    for num in (2..6)
+        &-{num}
+            > a
+            > div
+            > li
+                width (100/num)%
+                &:nth-child({num + 1})
+                    clear both
+
+            > a
+                border-bottom 0
+                display block
+
+    &--padding-20
+        > li
+            padding 0 20px
+
+    &--padding-right-20
+        > li
+            padding 0 10px
+
+            &:first-child
+                padding-left 0
+
+[class*='badge-']
+    display inline-block
+    border-radius d_border-radius
+    color #fff
+    padding 1px 4px 2px 4px
+    text-transform uppercase
+    letter-spacing .1em
+    font-size 10px
+    font-weight normal
+
+.badge
+    &-special
+        background-color c_orange
+
+    &-new
+        background-color c_green
+
+    &-not-in-stock
+        background-color c_greytext
+
+    &--large
+        font-size 12px
+
+.btn
+    transition background-color .2s
+    min-width 32px
+    text-align center
+    border-bottom 0
+    display inline-block
+    border-radius d_border-radius
+    background-color c_orange
+    //background-image radial-gradient(100% 119%, #FF7F5E 0%, #FF3023 100%);
+    background-position right top
+    font-size 13px
+    color #fff
+    padding 0 10px
+    padding-bottom 1px
+    position relative
+    line-height 29px
+
+    &:hover
+        border-bottom 0
+        color #fff
+        background-color alpha(c_orange, 0.8)
+
+    &--large
+        line-height 35px
+        font-size 15px
+
+    &--grey
+        background-color c_bluegrey
+
+        &:hover
+            background-color alpha(c_bluegrey, 0.8)
+
+    &--enter
+        background-image url('../img/icon_enter.svg')
+        background-repeat no-repeat
+        background-position 10px center
+        background-size 20px 20px
+
+        &-alone
+            background-position center center
+            background-size 24px 24px
+            height 63px
+            width 73px
+
+    &--full-width
+        width 100%
+
+    &__text
+        padding-top 6px
+        display inline-block
+        line-height 1.2em
+
+        [class*='icon-']
+            vertical-align middle
+            top -2px
+            margin-right 4px
+            margin-left -2px
+
+    &__added
+        position absolute
+        top 0
+        bottom 0
+        left 0
+        width 100%
+        background-color c_green
+        z-index 1
+        border-radius d_border-radius
+        opacity 0
+        pointer-events none
+        transition opacity .2s
+
+        &--show
+            opacity 1
+            pointer-events auto
+
+    /.owl-prev
+    /.owl-next
+    &--outline
+        background #fff
+        border 1px solid c_lightgrey
+        color c_text
+
+        &:hover
+            color #000
+            border 1px solid c_lightgrey
+            background-color c_lightergrey
+
+
+
+    &--iconed
+        height 32px
+        width 32px
+        position relative
+
+        &:after
+            position absolute
+            top 50%
+            left 50%
+            margin-top -12px
+            margin-left -12px
+            transition opacity .2s
+            width 24px
+            height 24px
+            content ''
+            display inline-block
+            background-repeat no-repeat
+            background-position center center
+
+    &--icon
+        &-arrow-left:after
+            background-image url('../img/icon_arrow_left.svg')
+
+        &-arrow-right:after
+            background-image url('../img/icon_arrow_right.svg')
+
+        &-grid:after
+            background-image url('../img/icon_grid.svg')
+
+        &-rows:after
+            background-image url('../img/icon_rows.svg')
+
+        &-minus:after
+            background-image url('../img/icon_minus.svg')
+
+        &-plus:after
+            background-image url('../img/icon_plus.svg')
+
+
+
+    &-group
+        .btn
+            border-radius 0
+            position relative
+            margin-left -1px
+
+            &:first-child
+                margin-left 0
+                border-top-left-radius d_border-radius
+                border-bottom-left-radius d_border-radius
+
+            &:last-child
+                border-top-right-radius d_border-radius
+                border-bottom-right-radius d_border-radius
+
+    &--active
+        cursor default
+        color c_greytext
+        background-color c_lightgrey
+
+        &:hover
+            background c_lightgrey
+            color c_greytext
+
+        &:after
+            opacity .5
+
+    &--dissabled
+        cursor default !important
+
+        &:hover
+            background #fff
+
+        &:after
+            opacity .2
+
+
+.input[type='text']
+.input[type='email']
+.input[type='password']
+.input[type='number']
+.input[type='tel']
+textarea
+    width 100%
+    padding 0 10px
+    border 1px solid c_lightgrey
+    border-radius d_border-radius
+
+textarea
+    padding-top 3px
+    padding-bottom 3px
+
+.input[type='text']
+.input[type='email']
+.input[type='password']
+.input[type='number']
+.input[type='tel']
+    height 32px
+
+.btn[type='submit']
+    border 0
+
+    &:disabled
+        opacity 0.2
+
+.inputs-group
+    .input
+    textarea
+        margin-top -1px
+        border-radius 0
+
+        &:first-child
+            border-top-left-radius d_border-radius
+            border-top-right-radius d_border-radius
+            margin-top 0
+
+        &:last-child
+            border-bottom-left-radius d_border-radius
+            border-bottom-right-radius d_border-radius
+
+        &:focus
+            z-index 1
+            position relative
+
+
+.countdown
+    font-size 32px
+    font-weight bold
+
+
+.control
+    &__count
+        display inline-block
+        position relative
+
+        .input
+            border-radius 0
+            width 40px
+            text-align center
+
+        &-plus
+        &-minus
+            border-radius 0
+            display inline-block
+            width 32px
+            height 32px
+            vertical-align top
+            border 1px solid c_lightgrey
+            cursor pointer
+            user-select none
+
+        &-plus
+            border-left 0
+            border-top-right-radius d_border-radius
+            border-bottom-right-radius d_border-radius
+
+            &:hover
+                border-left 0
+
+        &-minus
+            border-right 0
+            border-top-left-radius d_border-radius
+            border-bottom-left-radius d_border-radius
+
+            &:hover
+                border-right 0

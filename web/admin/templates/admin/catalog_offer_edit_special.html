@@ -1,0 +1,223 @@
+{% from 'admin/_macros.html' import render_form_field,
+                                    render_form_button,
+                                    render_image_field %}
+{% set page_title = 'Акция для «%s»' % offer.name %}
+{% extends 'admin/default.html' %}
+{% set form = special_form %}
+
+{% block stylesheets %}
+    {{ super() }}
+    <style>
+        .form-images {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            margin-left: -15px;
+            margin-bottom: 20px;
+        }
+
+        .form-images li {
+            display: inline-block;
+            width: 150px;
+            max-height: 220px;
+            margin-left: 15px;
+            position: relative;
+            vertical-align: top;
+        }
+
+        .form-images li .tools {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+        }
+
+        .form-images li .tools .pic_remove {
+            padding: 2px 7px;
+            background: #fff;
+            border-radius: 12px;
+            display: inline-block;
+        }
+
+        .form-images li .tools .pic_remove:hover {
+            background: red;
+        }
+
+        .form-images li .tools .pic_remove:hover .fa {
+            color: #fff;
+        }
+
+        .form-images li .tools span {
+            cursor: pointer;
+        }
+
+        .form-images li > img {
+            max-width: 100%;
+            max-height: 220px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="btn-group">
+              <a href="{{ url_for('admin.catalog.offer.edit', offer_id=offer.id) }}" class="btn btn-default">Редактирование</button>
+              <a href="{{ url_for('admin.catalog.offer.edit', offer_id=offer.id) }}" class="btn btn-default active">Добавить акцию</a>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-6">
+            <form role="form" method="post">
+                {{ form.hidden_tag() }}
+                <input type="hidden" value="{{ csrf_token() }}" name="csrf_token">
+                <div class="box">
+                    <div class="box-body">
+                        {% if not special.id %}
+                        <div class="form-group">
+                            <label for="type">Тип акции</label>
+                            {{ form.type(class='form-control') }}
+                        </div>
+                        {% else %}
+                        <div class="form-group">
+                            <label for="type">Тип акции</label><br />
+                            {% for choice in form.type.choices %}
+                                {% if choice[0] == form.type.data %}
+                                    {{ choice[1] }}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <hr>
+                        <div class="row">
+                            <div class="col-xs-4">
+                                <div class="form-group">
+                                    <label for="price_type">Тип изменения цены</label>
+                                    {{ form.price_type(class='form-control') }}
+                                </div>
+                            </div>
+                            <div class="col-xs-8">
+                                <div class="form-group">
+                                    <label for="price_value">Значение</label>
+                                    {{ form.price_value(class='form-control', type='number') }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="timer_type">Тип таймера</label>
+                            {{ form.timer_type(class='form-control') }}
+                        </div>
+                        <div class="row" id="by_date" style="display: none">
+                            <hr>
+                            <div class="col-xs-4">
+                                <div class="form-group">
+                                    <label for="timer_date">Дата</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-calendar"></i>
+                                        </div>
+                                        <input type="text" class="form-control" value="{{ form.timer_settings.data.get('timer_date', '') }}" name="timer_date" id="timer_date">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" id="by_time" style="display: none">
+                            <hr>
+                            <div class="col-xs-4">
+                                <div class="form-group">
+                                    <label for="timer_days">Кол-во дней</label>
+                                    <input type="number" name="timer_days" id="timer_days" value="{{ form.timer_settings.data.get('timer_days', '') }}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-xs-8">
+                                <div class="form-group">
+                                    <br />
+                                    <label for="timer_repeat" style="margin-top: 10px"><input type="checkbox" name="timer_repeat" id="timer_repeat"{% if form.timer_settings.data.get('timer_repeat') == 'on' %} checked{% endif %}> Повторять снова и снова</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box">
+                    <div class="box-body">
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                        {% if special %}
+                        <button type="submit" name="remove_special" class="btn btn-danger" style="float: right;">Удалить</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-3">
+             <div class="box">
+                 <div class="box-body" style="text-align: center;">
+                     <div><img src="{{ offer.get_picture('medium') }}" alt="" style="max-width: 150px;"></div>
+                     <div style="font-size: 16px; text-decoration: line-through;">{% if offer.get_oldprice %}{{ offer.get_oldprice }} руб.{% endif %}</div>
+                     <div style="font-size: 20px; font-weight: bold;">{{ offer.get_price() }} руб.</div>
+                 </div>
+             </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js_scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='admin/plugins/ckeditor/ckeditor.js') }}" type="text/javascript"></script>
+    <script>
+
+        var csrftoken = "{{ csrf_token() }}";
+
+
+        $(document).ready(function() {
+            var date = new Date;
+
+            $('#timer_date').daterangepicker({
+                singleDatePicker: true,
+                showDropdowns: true,
+                minDate: date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear(),
+                format: "DD/MM/YYYY"
+            });
+
+            function switchTimerType() {
+                var select = $('#timer_type'),
+                    posibleValues = (function() {
+                        var values = []
+                        $.each(select[0].options, function(i, item) {
+                            values.push(item.value);
+                        })
+                        return values;
+                    })(),
+                    value = select.serializeArray()[0].value || null;
+
+                if (value) {
+                    $.each(posibleValues, function(i, item) {
+                        if (item !== value) $('#by_' + item).hide()
+                    })
+                    $('#by_' + value).show()
+                }
+
+            }
+
+            switchTimerType();
+            $('#timer_type').on('change', switchTimerType);
+
+
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken)
+                    }
+                }
+            });
+
+        });
+
+
+
+    </script>
+{% endblock %}

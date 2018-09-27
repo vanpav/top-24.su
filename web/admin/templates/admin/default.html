@@ -1,0 +1,77 @@
+{% from 'admin/_macros.html' import messages, render_pagination with context %}
+{% extends 'admin/base.html' %}
+
+{% block body %}
+
+    <div class="wrapper">
+
+      {% include 'admin/parts/header.html' %}
+      {% include 'admin/parts/sidebar.html' %}
+
+      <div class="content-wrapper">
+        <section class="content-header">
+        {% block page_title %}
+            <h1>{{ page_title }}</h1>
+        {% endblock %}
+{#            <small>it all starts here</small>#}
+
+            {% block breadcrumbs %}
+
+            {% endblock %}
+{#          <ol class="breadcrumb">#}
+{#            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>#}
+{#            <li><a href="#">Examples</a></li>#}
+{#            <li class="active">Blank page</li>#}
+{#          </ol>#}
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            {% block messages %}
+            {{ messages() }}
+            {% endblock %}
+            {% block content %}
+                <a href="{{ url_for('admin.generate_offers_xls') }}" target="_blank" class="btn btn-default">Сгенерировать XLS с товарами</a>
+                <br /><br /><br />
+                <div class="box box-solid">
+                    <div class="box-header">
+                      <h3 class="box-title">Изменение цен</h3>
+                    </div>
+                    <div class="box-body">
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr>
+                                    <th>Дата</th>
+                                    <th style="width: 50%;">Товар</th>
+                                    <th>Старая цена</th>
+                                    <th>Новая цена</th>
+                                </tr>
+                                {% for pc in pcs.items %}
+                                <tr>
+                                    <td>{{ pc.date.strftime('%d.%m.%y %H:%M:%S') }}</td>
+                                    <td><a href="{{ url_for('admin.catalog.offer.edit', offer_id=pc.oid) }}">{{ pc.name|truncate(70) }}</a></td>
+                                    <td>{{ pc.old_price }} руб.</td>
+                                    <td>{{ pc.new_price }} руб.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="box-footer" style="text-align: center">
+                        {{ render_pagination(pcs, request.endpoint) }}
+                    </div>
+                </div>
+            {% endblock %}
+        </section><!-- /.content -->
+      </div><!-- /.content-wrapper -->
+
+{#      <footer class="main-footer">#}
+{#        <div class="pull-right hidden-xs">#}
+{#          <b>Version</b> 0.01#}
+{#        </div>#}
+{#        <strong>Copyright &copy; 2014-2015 <a href="http://almsaeedstudio.com">Almsaeed Studio</a>.</strong> All rights reserved.#}
+{#      </footer>#}
+
+    </div><!-- ./wrapper -->
+
+{% endblock %}

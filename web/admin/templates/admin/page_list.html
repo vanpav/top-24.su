@@ -1,0 +1,36 @@
+{% extends 'admin/default.html' %}
+{% set page_title = 'Страницы' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="">
+            <div class="btn-group">
+                <a href="{{ url_for('admin.pages.create') }}" class="btn btn-primary">Добавить</a>
+            </div>
+    </div>
+    <br />
+    <div class="box">
+        <div class="box-body no-padding">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th width="40px"></th>
+                        <th>Название</th>
+                        <th width="40%">Ссылка</th>
+                        <th width="30px">Удл.</th>
+                    </tr>
+                    {% for page in pages %}
+                    <tr>
+                        <td style="text-align: right;">{{ loop.index }}.</td>
+                        <td><a href={{ url_for('admin.pages.edit', id=page.id) }}>{{ page.name }}</a></td>
+                        <td><a href="{{ url_for('site.dispatcher', path=page.path) }}" target="_blank">{{ url_for('site.dispatcher', path=page.path) }}</a></td>
+                        <td><a href="{{ url_for('admin.pages.delete', id=page.id) }}"><i class="fa fa-times"></i></a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

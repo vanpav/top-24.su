@@ -1,0 +1,43 @@
+{% from 'macros/__all.html' import render_breadcrumbs %}
+{% from 'macros/__offers.html' import render_cart_offer %}
+{% extends 'base.html' %}
+
+{% block title %}
+Корзина{{ default_title_separator }}{{ default_title }}
+{% endblock %}
+
+{% block extrastyles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='admin/plugins/select2/select2.min.css') }}"/>
+<style>
+    .select2-selection {
+        height: 32px !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 29px;
+    }
+
+    .select2-container .select2-selection--single .select2-selection__rendered {
+        padding-left: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+{{ render_breadcrumbs() }}
+<div class="row">
+    <div class="col-12">
+        <h1>Моя корзина</h1>
+        <div riot-tag="cart" class="cart-page"></div>
+    </div>
+{#    <div class="col-3">#}
+{#        <cart-related></cart-related>#}
+{#    </div>#}
+</div>
+{% endblock %}
+
+{% block extrascripts %}
+<script src="{{ url_for('static', filename='admin/plugins/select2/select2.js') }}" defer></script>
+{#<script src="{{ url_for('static', filename='admin/plugins/select2/select2.ru.js') }}" defer></script>#}
+{% endblock %}
+

@@ -1,0 +1,229 @@
+{% from 'macros/__all.html' import render_breadcrumbs with context %}
+{% from 'macros/__offers.html' import render_offer %}
+{% extends 'base.html' %}
+
+
+{% set descr = offer.name + ' всего за ' + offer.get_price()|string + ' руб. и другие товары категории &laquo;' + offer.parent.get_root().name|string + '&raquo; в интернет-магазине ТОП-24. Удобная доставка и оплата.' %}
+
+
+{% block opengraph %}
+<meta property="og:title" content="{{ offer.name }}"/>
+<meta property="og:description" content="{{ descr|safe }}"/>
+<meta property="og:image" content="{{ offer.get_picture(absolute=True) }}">
+<meta property="og:type" content="website"/>
+<meta property="og:url" content= "{{ offer.get_canonical_url }}" />
+{% endblock %}
+
+{% block description %}{{ descr|safe }}{% endblock %}
+
+{% block extrastyles %}
+{% if offer.get_canonical() %}
+<link rel="canonical" href="{{ offer.get_canonical() }}" />
+{% endif %}
+{% endblock %}
+
+{% block title %}
+{{ offer.get_title }}{{ default_title_separator }}{{ default_title }}
+{% endblock %}
+
+{% block content %}
+{{ render_breadcrumbs() }}
+{% set reviews_length = reviews|length %}
+<div class="row">
+      <div class="col-12" itemscope itemtype="http://schema.org/Product">
+          <h1><span itemprop="name">{{ offer.name }}</span>{% if offer.special and not offer.special.is_over %} <span class="badge-special">Акция</span>{% endif %}</h1>
+          <div class="row row--padding offer">
+              <div class="col-6 col--padding-l-30 col--padding-r-30">
+                  <div class="offer__pictures">
+                      <img src="{{ offer.get_picture() }}" itemprop="image" class="hideme" alt="{{ offer.name }} Артикул #{{ offer.articul }}" title="{{ offer.name }} всего за {{ offer.get_price() }} руб.">
+                      <div class="fotorama" data-width="100%" data-maxheight="400" data-nav="thumbs" data-ratio="800/600" data-loop="true">
+                          {% for picture in offer.get_pictures() %}
+                          <a href="{{ picture }}"></a>
+                          {% endfor %}
+                      </div>
+                  </div>
+              </div>
+              <div class="col-6 offer__info-wrapper" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                  <favorite oid="{{ offer.id }}" favorited="{{ offer.is_in_favorites }}"></favorite>
+                  <offer-articul offer_id="{{ offer.id }}"></offer-articul>
+                  {% if offer.is_in_stock %}
+                  {% set store_count = offer.stats.store_count if offer.stats.store_count <= 100 else 'Больше 100' %}
+                  <div class="offer__stock offer__stock--in-stock">
+                      <span>В наличии</span>{% if store_count > 0%} {{ store_count }} на складе{% endif %}
+                      <link itemprop="availability" href="http://schema.org/InStock">
+                  </div>
+                  {% else %}
+                  <div class="offer__stock offer__stock--not-in-stock"><span>Нет в наличии</span></div>
+                  {% endif %}
+                  <div class="row row--margin-sm">
+                      <div class="col-6 offer__price{% if offer.special and not offer.special.is_over %} offer__price--special{% endif %}">
+                          <div class="offer__field-label">Цена</div>
+                          <strong itemprop="price">{{ offer.price.ru|smart_round }}</strong> руб.
+                          <meta itemprop="priceCurrency" content="RUB" />
+                          {% if offer.special and not offer.special.is_over %}<span>{{ offer.get_oldprice|smart_round }}</span>{% endif %}
+                      </div>
+                      {% if offer.special and not offer.special.is_over %}
+                      <div class="col-6">
+                          <div class="offer__field-label">До конца акции</div>
+                          <div class="countdown" data-countdown="{{ offer.special.timer }}"></div>
+                      </div>
+                      {% endif %}
+                  </div>
+                  {% if offer.short_description %}
+                  <a href="#" class="offer__text" tabindex="0">
+                      <span class="offer__text-tip">Полное описание</span>
+                      <span itemprop="description">{{ offer.short_description|safe }}</span>
+                  </a>
+                  {% else %}
+                      <span class="hideme" itemprop="description">{{ offer.description|striptags|truncate(length=510) }}</span>
+                  {% endif %}
+                  <div class="offer__reviews">
+                      <a href="#" tabindex="1">{% if reviews_length %}{{ get_plural(reviews_length, ['отзыв', 'отзыва', 'отзывов']) }}{% else %}Оставить отзыв{% endif %}</a>
+                  </div>
+                  {% if offer.is_in_stock %}
+                  <form riot-tag="offer-form" action="{{ url_for('site.cart') }}" method="post" offer_id="{{ offer.id }}"{% if offer.variants %} hasvariants="true"{% endif %}></form>
+                  {% set deliveries = offer.get_delivery_price(region_id) %}
+                  {% if  deliveries %}
+                  <div class="offer__deliveries" riot-tag="offer-delivery" aid="{{ offer.aid }}" current_region="{{ region_id }}">
+                      <div class="offer__deliveries-town">Доставка: <span class="pseudo">{{ deliveries['name'] }}</span></div>
+                      <ul class="offer__deliveries-list">
+                      {% for method, price in deliveries['deliveries'] %}
+                          <li class="offer__deliveries-item"><div class="offer__deliveries-method">{{ method }}:</div>от {{ price|smart_round }} руб.</li>
+                      {% else %}
+                          <li class="offer__deliveries-item"><div class="offer__deliveries-method">Уточняйте у оператора</div></li>
+                      {% endfor %}
+                      </ul>
+                  </div>
+                  {% endif %}
+                  {% else %}
+                      <span class="btn btn--large btn--outline">Нет в наличии</span>
+                  {% endif %}
+                  <div class="offer__social ya-share2" data-services="vkontakte,odnoklassniki,facebook,moimir,twitter,gplus" data-title="{{ offer.name }} | {{ default_title }}" data-image="{{ offer.get_absolute_picture }}"{% if offer.short_description %} data-description="{{ offer.short_description|striptags }}{% endif %}"></div>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-12">
+                  <ul class="blocks-5 benefits text-center">
+                      <li class="benefits__item">
+                          <i class="icon-32 icon--map"></i>
+                          <span class="benefits__text">Доставка во все регионы России</span>
+                      </li>
+                      <li class="benefits__item">
+                          <i class="icon-32 icon--wallet"></i>
+                          <span class="benefits__text">Множество способов оплаты заказа</span>
+                      </li>
+                      <li class="benefits__item">
+                          <i class="icon-32 icon--finger"></i>
+                          <span class="benefits__text">Возможность заказа в один клик</span>
+                      </li>
+                      <li class="benefits__item">
+                          <i class="icon-32 icon--reload"></i>
+                          <span class="benefits__text">Гарантия возврата в течении 14 дней</span>
+                      </li>
+                      <li class="benefits__item">
+                          <i class="icon-32 icon--award"></i>
+                          <span class="benefits__text">Отличное качество товаров</span>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+      </div>
+</div>
+{% if related_offers %}
+<div class="row row--margin">
+    <div class="col-12">
+        <p class="h2-header">Так же покупают</p>
+        <ul class="blocks-4 offers js-offers-special">
+            {% for offer in related_offers %}
+            {{ render_offer(offer) }}
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+{% if banners %}
+{% set banner = banners[0] %}
+<div class="row row--padding">
+    <a href="{{ banner.get_link_to }}" class="col-12 banner" style="background-color: {{ banner.bg_color }}">
+        <div class="row banner__image" style="background-image: url('{{ url_for('media', filename=banner.bg_image) }}');">
+            <div class="col-6 col--padd-1"><span class="banner__text">{{ banner.left_top }}<strong class="banner__text-important">{{ banner.left_bot }}</strong></span></div>
+            <div class="col-3 col--padd-2"><span class="banner__text">{{ banner.right_top }}<strong class="banner__text-important">{{ banner.right_bot }}</strong></span></div>
+        </div>
+    </a>
+</div>
+{% endif %}
+<div class="row row--margin">
+    <div class="col-9" riot-tag="tabs">
+        <tab heading="Описание" active="true">
+        {% if not offer.description %}
+            <p>Описания товара нет</p>
+        {% else %}
+            {{ offer.get_description|safe }}
+        {% endif %}
+        </tab>
+        <tab heading="{% if reviews_length %}{{ get_plural(reviews_length, ['отзыв', 'отзыва', 'отзывов']) }}{% else %}Отзывы{% endif %}">
+            {% if reviews_length %}
+            <ul class="reviews">
+                {% for review in reviews %}
+                <li class="reviews__item">
+                    <p class="reviews__item-name">{{ review.fullname }}</p>
+                    <p class="reviews__item-text">{{ review.text|safe }}</p>
+                    <div class="reviews__item-info">
+{#                        <div class="review__item-stars">{{ review.rating }}</div>#}
+                        <div class="reviews__item-date">{{ review.created_at|pretty_date }}</div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>О товаре «{{ offer.name }}» отзывы не оставляли, будьте первым</p>
+            {% endif %}
+            <comment-form offerid="{{ offer.id }}"></comment-form>
+        </tab>
+    </div>
+    <div class="col-3 col--padding-l-30 js-sticky">
+        <div class="offer-compact text-center">
+            <div class="offer-compact__badges">
+                {% if offer.special and not offer.special.is_over %}
+                <span class="badge-special">Акция</span><br>
+                {% endif %}
+{#                <br>#}
+{#                <span class="badge-new">Новинка</span>#}
+            </div>
+            <favorite oid="{{ offer.id }}" favorited="{{ offer.is_in_favorites }}"></favorite>
+            <div class="offer-compact__image"><img src="{{ offer.get_picture('small') }}" alt="{{ offer.name }}" title="{{ offer.name }}"/></div>
+            <p class="offer-compact__name">{{ offer.name }}</p>
+            <div class="offer-compact__price{% if offer.special and not offer.special.is_over %} offer-compact__price--special{% endif %}">
+                {{ offer.price.ru|smart_round }} руб.
+                {% if offer.special and not offer.special.is_over %}<span>{{ offer.get_oldprice|smart_round }} руб.</span>{% endif %}
+            </div>
+            {% if offer.special and not offer.special.is_over %}
+            <div class="offer-compact__timer">
+                <span class="offer-compact__timer-title">До конца акции</span>
+                <div class="countdown" data-countdown="{{ offer.special.timer }}"></div>
+            </div>
+            {% endif %}
+            <div class="offer-compact__buttons">
+                {% if offer.is_in_stock %}
+                <button riot-tag="add-to-cart" id="{{ offer.id }}" class="btn btn--large btn--full-width"><span class="btn__text"><i class="icon-16 icon--cart-white"></i>В корзину</span></button>
+                <a href="" riot-tag="quick-buy" id="{{ offer.id }}" class="btn btn--grey btn--large btn--full-width"><span class="btn__text">Купить сейчас</span></a>
+                {% else %}
+                    <span class="btn btn--large btn--full-width btn--outline">Нет в наличии</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% if popular_offers %}
+<div class="row row--margin">
+    <div class="col-12">
+        <p class="h2-header">Популярные товары</p>
+        <ul class="blocks-4 offers js-offers-four">
+            {% for offer in popular_offers %}
+            {{ render_offer(offer) }}
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
